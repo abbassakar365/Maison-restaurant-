@@ -882,8 +882,8 @@ begin
   need := greatest(1, ceil(greatest(coalesce(p_guests, 1), 1)::numeric / s.seats_per_table))::int;
   return query
     with slots as (
-      select ((day::date + tm) at time zone 'Asia/Beirut') as slot
-      from generate_series((p_at at time zone 'Asia/Beirut')::date, (p_at at time zone 'Asia/Beirut')::date + 6, interval '1 day') day,
+      select ((d::date + tm) at time zone 'Asia/Beirut') as slot
+      from generate_series((p_at at time zone 'Asia/Beirut')::date::timestamp, (p_at at time zone 'Asia/Beirut')::date::timestamp + interval '6 days', interval '1 day') d,
            generate_series(timestamp '2000-01-01' + s.open_time, timestamp '2000-01-01' + s.last_booking, interval '30 minutes') g,
            lateral (select g::time as tm) x
     )
