@@ -1,17 +1,19 @@
 // Maison Hamra — phone Auto-pilot. Answers calls, books tables, puts guests through to the team.
 //
-// Twilio setup (Phone Numbers → your number → Voice configuration):
-//   A call comes in:    Webhook  https://efwqkllaultepxprwert.supabase.co/functions/v1/voice   (HTTP POST)
-//   Call status changes:         https://efwqkllaultepxprwert.supabase.co/functions/v1/voice?step=status
-// Every request must carry Twilio's X-Twilio-Signature, checked with the auth token in
-// Supabase Vault (`twilio_auth_token`). Claude's API key is in Vault as `anthropic_api_key`.
+// Phone provider: SignalWire (or Twilio; both speak the same call XML). On the phone number set
+//   Handle calls using: LaML/cXML Webhooks
+//   When a call comes in:    https://efwqkllaultepxprwert.supabase.co/functions/v1/voice   (POST)
+//   Status change callback:  https://efwqkllaultepxprwert.supabase.co/functions/v1/voice?step=status
+// Every request must be signed by the provider (X-SignalWire-Signature or X-Twilio-Signature), checked
+// with the key in Supabase Vault: `phone_signing_key` (SignalWire Signing Key) or `twilio_auth_token`.
+// Claude's API key is in Vault as `anthropic_api_key`.
 // The team turns the Auto-pilot on or off and sets the transfer number in the team app → Calls.
 //
 // Steps: start → (turn | silence)* → transfer → dial-done → … ; status runs when the call ends.
 import Anthropic from "npm:@anthropic-ai/sdk@0.132.1";
 import { createClient } from "npm:@supabase/supabase-js@2.45.4";
 import { type CallState, type Deps, runTurn, type Turn } from "./agent.ts";
-import { dial, empty, gather, hangup, type Lang, LINES, safeEqual, sayOnly, twilioSignature } from "./twiml.ts";
+import { dial, empty, gather, hangup, type Lang, LINES, sayOnly, validSignature } from "./twiml.ts";
 
 const BASE = "https://efwqkllaultepxprwert.supabase.co/functions/v1/voice";
 const url = (step: string) => `${BASE}?step=${step}`;
@@ -248,10 +250,9 @@ Deno.serve(async (req) => {
 
   let cfg: Config;
   try { cfg = await config(); } catch (e) { console.error(e); return new Response("Not configured", { status: 500 }); }
-  if (!cfg.twilio) return new Response("Twilio auth token missing in Vault (twilio_auth_token)", { status: 503 });
-  const given = req.headers.get("x-twilio-signature") ?? "";
-  const expected = await twilioSignature(cfg.twilio, BASE + new URL(req.url).search, p);
-  if (!given || !safeEqual(given, expected)) return new Response("Invalid signature", { status: 403 });
+  if (!cfg.twilio) return new Response("Phone signing key missing in Vault (phone_signing_key)", { status: 503 });
+  const given = req.headers.get("x-signalwire-signature") ?? req.headers.get("x-twilio-signature") ?? "";
+  if (!await validSignature(cfg.twilio, given, BASE + new URL(req.url).search, p, raw)) return new Response("Invalid signature", { status: 403 });
   if (!p.CallSid) return new Response("Missing CallSid", { status: 400 });
 
   const xml = await handle(step, p, cfg);

@@ -95,7 +95,8 @@ create or replace function public.voice_config()
 returns json language sql stable security definer set search_path = public, vault as $$
   select json_build_object(
     'anthropic', (select decrypted_secret from vault.decrypted_secrets where name = 'anthropic_api_key'),
-    'twilio',    (select decrypted_secret from vault.decrypted_secrets where name = 'twilio_auth_token'),
+    'twilio',    coalesce((select decrypted_secret from vault.decrypted_secrets where name = 'phone_signing_key'),
+                          (select decrypted_secret from vault.decrypted_secrets where name = 'twilio_auth_token')),
     'enabled',   (select enabled from public.phone_settings where id = 1),
     'team_phone',(select team_phone from public.phone_settings where id = 1),
     'language',  (select language from public.phone_settings where id = 1))
@@ -291,4 +292,4 @@ with removed as (delete from public.calls where call_sid = 'SETUP-TEST-CALL' ret
 select (select count(*) = 1 from removed where status = 'ended') as test_call_written,
        (select count(*) = 1 from public.phone_settings) as phone_settings_ok,
        (select (public.voice_config()->>'anthropic') is not null) as anthropic_key_in_vault,
-       (select (public.voice_config()->>'twilio') is not null) as twilio_token_in_vault;
+       (select (public.voice_config()->>'twilio') is not null) as phone_signing_key_in_vault;

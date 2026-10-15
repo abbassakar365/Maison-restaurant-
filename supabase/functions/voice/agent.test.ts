@@ -4,7 +4,7 @@ import { assert, assertEquals, assertMatch } from "jsr:@std/assert@1.0.13";
 import { createHmac } from "node:crypto";
 import type Anthropic from "npm:@anthropic-ai/sdk@0.132.1";
 import { beirutISO, type Booking, type CallState, type Deps, runTurn, TOOLS } from "./agent.ts";
-import { dial, gather, hangup, speakable, twilioSignature } from "./twiml.ts";
+import { dial, gather, hangup, speakable, twilioSignature, validSignature } from "./twiml.ts";
 
 type Block = Anthropic.Beta.BetaContentBlock;
 const text = (t: string): Block => ({ type: "text", text: t, citations: null }) as Block;
@@ -176,4 +176,19 @@ Deno.test("Twilio signature matches the reference algorithm", async () => {
   const data = url + Object.keys(params).sort().map((k) => k + params[k as keyof typeof params]).join("");
   const expected = createHmac("sha1", "secret-token").update(data).digest("base64");
   assertEquals(await twilioSignature("secret-token", url, params), expected);
+});
+
+Deno.test("SignalWire and Twilio signatures are accepted, wrong ones refused", async () => {
+  const params = { CallSid: "CA123", From: "+96170000000" };
+  const url = "https://efwqkllaultepxprwert.supabase.co/functions/v1/voice?step=start";
+  const raw = new URLSearchParams(params).toString();
+  const compat = createHmac("sha1", "signing-key").update(url + "CallSidCA123From+96170000000").digest("base64");
+  const hex = createHmac("sha1", "signing-key").update(url + raw).digest("hex");
+  const withPort = createHmac("sha1", "signing-key")
+    .update(url.replace(".co/", ".co:443/") + "CallSidCA123From+96170000000").digest("base64");
+  assertEquals(await validSignature("signing-key", compat, url, params, raw), true);
+  assertEquals(await validSignature("signing-key", hex, url, params, raw), true);
+  assertEquals(await validSignature("signing-key", withPort, url, params, raw), true);
+  assertEquals(await validSignature("other-key", compat, url, params, raw), false);
+  assertEquals(await validSignature("signing-key", "", url, params, raw), false);
 });

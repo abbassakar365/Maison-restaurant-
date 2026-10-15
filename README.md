@@ -109,22 +109,23 @@ The phone Auto-pilot answers the restaurant's phone number with a voice. It talk
 
 The team app's **Calls** tab lists every call with its full transcript (live calls update as they happen) and has the settings: the on/off switch, the **team phone for transfers** and the greeting language. When the switch is off, calls go straight to the team phone.
 
-**How it works:** Twilio receives the call and sends what the guest says to the `voice` Edge Function (`supabase/functions/voice`). The function asks Claude (Anthropic's AI model) what to answer, runs the booking tools against the database, and replies with what Twilio should say. The database side is in `sql/phone_autopilot.sql`.
+**How it works:** SignalWire receives the call and sends what the guest says to the `voice` Edge Function (`supabase/functions/voice`). The function asks Claude (Anthropic's AI model) what to answer, runs the booking tools against the database, and replies with what the phone should say, in cXML (the same call language Twilio uses, so a Twilio number works too). The database side is in `sql/phone_autopilot.sql`.
 
 **Setup:**
-1. **Twilio:** create an account at twilio.com and buy a phone number with voice (or port the restaurant's number to Twilio, or forward the restaurant's line to the Twilio number). In Phone Numbers → your number → Voice configuration, set:
-   - **A call comes in:** Webhook, `https://efwqkllaultepxprwert.supabase.co/functions/v1/voice`, HTTP POST
-   - **Call status changes:** `https://efwqkllaultepxprwert.supabase.co/functions/v1/voice?step=status`
+1. **SignalWire:** create an account at signalwire.com and a Space, then buy a phone number with voice (or forward the restaurant's line to it). In Phone Numbers → your number → Edit settings, set **Handle calls using** to *LaML/cXML Webhooks* and:
+   - **When a call comes in:** `https://efwqkllaultepxprwert.supabase.co/functions/v1/voice` (POST)
+   - **Status change callback:** `https://efwqkllaultepxprwert.supabase.co/functions/v1/voice?step=status`
 2. **Claude:** create an API key at platform.claude.com.
 3. **Store both keys in Supabase Vault** (SQL editor), never in this repository:
    ```sql
    select vault.create_secret('<Anthropic API key>', 'anthropic_api_key');
-   select vault.create_secret('<Twilio auth token>', 'twilio_auth_token');  -- Twilio Console → Account info
+   select vault.create_secret('<SignalWire Signing Key>', 'phone_signing_key');  -- SignalWire → API → Signing Key
    ```
+   With a Twilio number instead, store the Twilio auth token as `twilio_auth_token`.
 4. In the team app → **Calls**, enter the **team phone for transfers** (for example `+961 3 123 456`) and save.
 5. Call the number to test. The call shows in the Calls tab as it happens.
 
-The function refuses any request that isn't signed by Twilio with your auth token. It uses the `claude-opus-5-5` model at low effort to keep answers quick; the model is set in `supabase/functions/voice/agent.ts` (`MODEL`). Each call costs Twilio's per-minute price plus a few cents of Claude usage. Tests: `deno test supabase/functions/voice/agent.test.ts`.
+The function refuses any request that isn't signed with your Signing Key (or Twilio auth token). It uses the `claude-opus-5-5` model at low effort to keep answers quick; the model is set in `supabase/functions/voice/agent.ts` (`MODEL`). Each call costs the phone provider's per-minute price plus a few cents of Claude usage. Tests: `deno test supabase/functions/voice/agent.test.ts`.
 
 ## Security
 

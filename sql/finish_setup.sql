@@ -1,12 +1,12 @@
 -- =====================================================================
 -- Finish setting up the Maison-restaurant- project (efwqkllaultepxprwert)
 -- Paste into https://supabase.com/dashboard/project/efwqkllaultepxprwert/sql/new
--- Replace the three <...> values first, then Run.
+-- Replace the three <...> values (keep the quote marks) first, then Run.
 -- =====================================================================
 
 -- 1. Keys for the phone Auto-pilot (they stay in Vault, never in the code)
 select vault.create_secret('<Anthropic API key>', 'anthropic_api_key');
-select vault.create_secret('<Twilio auth token>', 'twilio_auth_token');   -- Twilio Console → Account info
+select vault.create_secret('<SignalWire Signing Key>', 'phone_signing_key');   -- SignalWire → API → Signing Key
 
 -- 2. Make yourself a team member (sign up on the website first with this email)
 insert into public.staff (user_id)

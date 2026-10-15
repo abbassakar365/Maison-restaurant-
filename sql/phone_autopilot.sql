@@ -2,14 +2,14 @@
 -- Phone Auto-pilot (team app → Calls)
 -- Applied as migration mh_12_phone_autopilot. Safe to re-run.
 --
--- A Twilio phone number sends every incoming call to the `voice` Edge Function
+-- A SignalWire (or Twilio) phone number sends every incoming call to the `voice` Edge Function
 -- (supabase/functions/voice). The function talks with the guest through Claude,
 -- checks free tables, books the table once the guest confirms, and transfers the
 -- call to the team phone when the guest asks for a person.
 --
 -- Keys live in Supabase Vault (never in this repository):
 --   select vault.create_secret('<Anthropic API key>', 'anthropic_api_key');
---   select vault.create_secret('<Twilio auth token>',  'twilio_auth_token');
+--   select vault.create_secret('<SignalWire Signing Key>', 'phone_signing_key');  -- or a Twilio auth token as 'twilio_auth_token'
 -- =====================================================================
 
 -- Phone bookings have no website account unless the caller's number matches one
@@ -81,7 +81,8 @@ create or replace function public.voice_config()
 returns json language sql stable security definer set search_path = public, vault as $$
   select json_build_object(
     'anthropic', (select decrypted_secret from vault.decrypted_secrets where name = 'anthropic_api_key'),
-    'twilio',    (select decrypted_secret from vault.decrypted_secrets where name = 'twilio_auth_token'),
+    'twilio',    coalesce((select decrypted_secret from vault.decrypted_secrets where name = 'phone_signing_key'),
+                          (select decrypted_secret from vault.decrypted_secrets where name = 'twilio_auth_token')),
     'enabled',   (select enabled from public.phone_settings where id = 1),
     'team_phone',(select team_phone from public.phone_settings where id = 1),
     'language',  (select language from public.phone_settings where id = 1))

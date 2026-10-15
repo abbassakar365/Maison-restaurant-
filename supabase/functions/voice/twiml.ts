@@ -1,4 +1,4 @@
-// TwiML (Twilio's call instructions) and Twilio request signing.
+// cXML / TwiML call instructions (SignalWire and Twilio speak the same XML) and request signing.
 
 export type Lang = "en" | "fr" | "ar";
 
@@ -104,6 +104,31 @@ export async function twilioSignature(authToken: string, url: string, params: Re
   const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(authToken), { name: "HMAC", hash: "SHA-1" }, false, ["sign"]);
   const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(data));
   return btoa(String.fromCharCode(...new Uint8Array(sig)));
+}
+
+async function hmacSha1(key: string, data: string): Promise<Uint8Array> {
+  const k = await crypto.subtle.importKey("raw", new TextEncoder().encode(key), { name: "HMAC", hash: "SHA-1" }, false, ["sign"]);
+  return new Uint8Array(await crypto.subtle.sign("HMAC", k, new TextEncoder().encode(data)));
+}
+
+// The same URL with and without the default port, since the provider may sign either form
+function urlVariants(url: string): string[] {
+  const u = new URL(url);
+  if (u.port) return [url];
+  const port = u.protocol === "https:" ? ":443" : ":80";
+  return [url, `${u.protocol}//${u.host}${port}${u.pathname}${u.search}`];
+}
+
+// Accepts a request signed by SignalWire (Signing Key) or Twilio (auth token):
+// base64 HMAC-SHA1 of URL + sorted params (Twilio-compatible), or hex HMAC-SHA1 of URL + raw body.
+export async function validSignature(key: string, given: string, url: string, params: Record<string, string>, raw: string): Promise<boolean> {
+  if (!given) return false;
+  for (const u of urlVariants(url)) {
+    if (safeEqual(given, await twilioSignature(key, u, params))) return true;
+    const hex = [...await hmacSha1(key, u + raw)].map((b) => b.toString(16).padStart(2, "0")).join("");
+    if (safeEqual(given.toLowerCase(), hex)) return true;
+  }
+  return false;
 }
 
 export function safeEqual(a: string, b: string): boolean {
