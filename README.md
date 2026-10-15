@@ -113,20 +113,19 @@ The team app's **Calls** tab lists every call with its full transcript (live cal
 
 **Setup:**
 1. **SignalWire:** create an account at signalwire.com and a Space, then buy a phone number with voice (or forward the restaurant's line to it). Then:
-   - **My Resources → + Add → Script → cXML Script** (not SWML). Name it "Maison phone", set **Handle Calls Using** to *External URL* and **Primary Script URL** to `https://efwqkllaultepxprwert.supabase.co/functions/v1/voice`, then Create.
+   - **My Resources → + Add → Script → cXML Script** (not SWML). Name it "Maison phone", set **Handle Calls Using** to *External URL* and **Primary Script URL** to the phone URL with its secret (`https://efwqkllaultepxprwert.supabase.co/functions/v1/voice?k=…`; the last query in `sql/finish_setup.sql` prints it), then Create.
    - **Phone Numbers → your number → Edit Settings → Inbound Call Settings → Assign Resource**, pick "Maison phone" and save.
    - (Twilio instead: "A call comes in" webhook = the same URL, POST; status callback = the same URL with `?step=status`.)
 2. **Claude:** create an API key at platform.claude.com.
-3. **Store both keys in Supabase Vault** (SQL editor), never in this repository:
+3. **Store the Claude key in Supabase Vault** (SQL editor), never in this repository:
    ```sql
    select vault.create_secret('<Anthropic API key>', 'anthropic_api_key');
-   select vault.create_secret('<SignalWire Signing Key>', 'phone_signing_key');  -- SignalWire → API → Signing Key
    ```
-   With a Twilio number instead, store the Twilio auth token as `twilio_auth_token`.
+   The phone URL's secret is already in Vault as `phone_url_key` (made by the setup). If your provider shows a request-signing key, you can store it too: `phone_signing_key` (SignalWire Signing Key) or `twilio_auth_token` (Twilio).
 4. In the team app → **Calls**, enter the **team phone for transfers** (for example `+961 3 123 456`) and save.
 5. Call the number to test. The call shows in the Calls tab as it happens.
 
-The function refuses any request that isn't signed with your Signing Key (or Twilio auth token). It uses the `claude-opus-5-5` model at low effort to keep answers quick; the model is set in `supabase/functions/voice/agent.ts` (`MODEL`). Each call costs the phone provider's per-minute price plus a few cents of Claude usage. Tests: `deno test supabase/functions/voice/agent.test.ts`.
+The function refuses any request that doesn't carry the URL secret or a valid signature from your provider. It uses the `claude-opus-5-5` model at low effort to keep answers quick; the model is set in `supabase/functions/voice/agent.ts` (`MODEL`). Each call costs the phone provider's per-minute price plus a few cents of Claude usage. Tests: `deno test supabase/functions/voice/agent.test.ts`.
 
 ## Security
 

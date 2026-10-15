@@ -5,8 +5,8 @@
 //   Primary Script URL: https://efwqkllaultepxprwert.supabase.co/functions/v1/voice
 //   then Phone Numbers → the number → Edit Settings → Inbound Call Settings → Assign Resource → that script.
 //   (Twilio: "A call comes in" webhook = same URL, POST; status callback = same URL + ?step=status.)
-// Every request must be signed by the provider (X-SignalWire-Signature or X-Twilio-Signature), checked
-// with the key in Supabase Vault: `phone_signing_key` (SignalWire Signing Key) or `twilio_auth_token`.
+// Every request must carry the secret from Supabase Vault `phone_url_key` in the URL (…/voice?k=<secret>), or be
+// signed by the provider (X-SignalWire-Signature or X-Twilio-Signature) with `phone_signing_key` or `twilio_auth_token`.
 // Claude's API key is in Vault as `anthropic_api_key`.
 // The team turns the Auto-pilot on or off and sets the transfer number in the team app → Calls.
 //
@@ -14,16 +14,19 @@
 import Anthropic from "npm:@anthropic-ai/sdk@0.132.1";
 import { createClient } from "npm:@supabase/supabase-js@2.45.4";
 import { type CallState, type Deps, runTurn, type Turn } from "./agent.ts";
-import { dial, empty, gather, hangup, type Lang, LINES, sayOnly, validSignature } from "./twiml.ts";
+import { dial, empty, gather, hangup, type Lang, LINES, safeEqual, sayOnly, validSignature } from "./twiml.ts";
 
 const BASE = "https://efwqkllaultepxprwert.supabase.co/functions/v1/voice";
-const url = (step: string) => `${BASE}?step=${step}`;
+// When the provider can't sign requests, the webhook URL carries a secret instead (?k=…, Vault: phone_url_key);
+// every follow-up URL we hand the provider carries it too. It is the same for every call.
+let urlKey: string | null = null;
+const url = (step: string) => `${BASE}?step=${step}` + (urlKey ? `&k=${encodeURIComponent(urlKey)}` : "");
 
 const sb = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, {
   auth: { persistSession: false, autoRefreshToken: false },
 });
 
-type Config = { anthropic: string | null; twilio: string | null; enabled: boolean; team_phone: string | null; language: Lang };
+type Config = { anthropic: string | null; twilio: string | null; url_key: string | null; enabled: boolean; team_phone: string | null; language: Lang };
 async function config(): Promise<Config> {
   const { data, error } = await sb.rpc("voice_config");
   if (error || !data) throw new Error("voice_config unavailable: " + error?.message);
@@ -243,17 +246,23 @@ async function handle(step: string, p: Record<string, string>, cfg: Config): Pro
 }
 
 Deno.serve(async (req) => {
-  if (req.method !== "POST") return new Response("Method not allowed", { status: 405 });
-  const raw = await req.text();
+  if (req.method !== "POST" && req.method !== "GET") return new Response("Method not allowed", { status: 405 });
+  // the call details come in the body (POST) or, if the provider fetches the script with GET, in the query
+  const raw = req.method === "POST" ? await req.text() : "";
   if (raw.length > 20000) return new Response("Too large", { status: 413 });
-  const p = Object.fromEntries(new URLSearchParams(raw));
+  const p = Object.fromEntries(new URLSearchParams(req.method === "POST" ? raw : new URL(req.url).search));
+  delete p.step; delete p.k;
   const step = new URL(req.url).searchParams.get("step") ?? "start";
 
   let cfg: Config;
   try { cfg = await config(); } catch (e) { console.error(e); return new Response("Not configured", { status: 500 }); }
-  if (!cfg.twilio) return new Response("Phone signing key missing in Vault (phone_signing_key)", { status: 503 });
+  if (!cfg.twilio && !cfg.url_key) return new Response("Phone key missing in Vault (phone_signing_key or phone_url_key)", { status: 503 });
+  const k = new URL(req.url).searchParams.get("k") ?? "";
   const given = req.headers.get("x-signalwire-signature") ?? req.headers.get("x-twilio-signature") ?? "";
-  if (!await validSignature(cfg.twilio, given, BASE + new URL(req.url).search, p, raw)) return new Response("Invalid signature", { status: 403 });
+  const ok = (cfg.url_key && k && safeEqual(k, cfg.url_key)) ||
+    (cfg.twilio && await validSignature(cfg.twilio, given, BASE + new URL(req.url).search, p, raw));
+  if (!ok) return new Response("Invalid signature", { status: 403 });
+  urlKey = cfg.url_key && k ? cfg.url_key : null;
   if (!p.CallSid) return new Response("Missing CallSid", { status: 400 });
 
   const xml = await handle(step, p, cfg);

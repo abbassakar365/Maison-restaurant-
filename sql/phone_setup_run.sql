@@ -97,6 +97,7 @@ returns json language sql stable security definer set search_path = public, vaul
     'anthropic', (select decrypted_secret from vault.decrypted_secrets where name = 'anthropic_api_key'),
     'twilio',    coalesce((select decrypted_secret from vault.decrypted_secrets where name = 'phone_signing_key'),
                           (select decrypted_secret from vault.decrypted_secrets where name = 'twilio_auth_token')),
+    'url_key',   (select decrypted_secret from vault.decrypted_secrets where name = 'phone_url_key'),
     'enabled',   (select enabled from public.phone_settings where id = 1),
     'team_phone',(select team_phone from public.phone_settings where id = 1),
     'language',  (select language from public.phone_settings where id = 1))
