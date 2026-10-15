@@ -1,0 +1,20 @@
+/* Deposit payment page */
+.pay-main { padding-top: 28px; padding-bottom: 60px; display: grid; gap: 22px; }
+.due { text-align: center; border-top: 4px solid var(--gold); }
+.due h1 { font-size: clamp(2.6rem, 10vw, 4rem); color: var(--wine); }
+.due p { margin-top: 6px; }
+.countdown { font-weight: 700; color: var(--warn); display: inline-flex; gap: 6px; align-items: center; justify-content: center; flex-wrap: wrap; }
+.due .pill { display: inline-block; margin-top: 12px; }
+.dep-due { background: #fff1d6; color: var(--warn); } .dep-review { background: #fde9c2; color: #7a4b00; }
+.dep-paid { background: #e3f0e5; color: var(--ok); } .dep-expired, .dep-none { background: #f3ece0; color: var(--muted); }
+.methods h2, #paid-form h2 { font-size: 2rem; margin-bottom: 12px; }
+.method-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
+.method { display: grid; gap: 8px; align-content: start; scroll-margin-top: calc(var(--head-h) + 20px); }
+.method:target { box-shadow: 0 0 0 3px var(--gold), var(--shadow); }
+.method .btn { justify-self: start; }
+.bank { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; font-size: .92rem; }
+.bank dt { font-weight: 700; color: var(--muted); }
+.bank dd { margin: 0; display: flex; gap: 8px; align-items: center; justify-content: space-between; flex-wrap: wrap; overflow-wrap: anywhere; font-family: ui-monospace, Menlo, Consolas, monospace; }
+#paid-form { max-width: 560px; width: 100%; margin: 0 auto; }
+.secure { display: flex; gap: 8px; align-items: center; justify-content: center; text-align: center; color: var(--muted); font-size: .88rem; flex-wrap: wrap; }
+.secure .ico { color: var(--ok); }

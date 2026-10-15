@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://efwqkllaultepxprwert.supabase.co; connect-src 'self' https://efwqkllaultepxprwert.supabase.co wss://efwqkllaultepxprwert.supabase.co; base-uri 'self'; form-action 'self'">
+<meta name="robots" content="noindex">
+<title>Pay deposit — Maison Hamra</title>
+<meta name="theme-color" content="#5a1a24">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Lato:wght@400;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/pay.css">
+</head>
+<body>
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="index.html"><img src="icons/icon.svg" alt="" width="40" height="40"><span><b>Maison Hamra</b><small>Secure deposit payment</small></span></a>
+    <div class="tools">
+      <div class="bell-wrap">
+        <button id="bell" class="icon-btn" type="button" aria-label="Notifications" aria-haspopup="true" aria-expanded="false" aria-controls="notif-panel"><i data-icon="bell"></i><span id="badge" class="badge" hidden>0</span></button>
+        <div id="notif-panel" class="panel" hidden>
+          <div class="panel-head"><strong>Notifications</strong><button id="read-all" type="button" class="link">Mark all read</button></div>
+          <button id="alerts-btn" type="button" class="btn small gold" hidden>Turn on phone alerts &amp; sound</button>
+          <ul id="notif-list" class="notif-list"></ul>
+        </div>
+      </div>
+      <a class="icon-btn" href="index.html#reserve">Back</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap pay-main">
+  <section class="card due" id="due-card" hidden>
+    <p class="eyebrow">Deposit</p>
+    <h1 id="due-amount">$0</h1>
+    <p id="due-what"></p>
+    <p class="countdown" id="countdown"></p>
+    <p class="pill" id="due-status"></p>
+  </section>
+  <p class="card muted" id="pay-info"></p>
+
+  <section class="methods">
+    <h2>Payment methods</h2>
+    <div class="method-grid">
+      <article class="card method" id="card-method">
+        <i data-icon="card" class="ico big"></i>
+        <h3>Card</h3>
+        <p>Pay by Visa or Mastercard on our payment provider's secure checkout page. Your card details go directly to the provider — Maison Hamra never sees or stores them.</p>
+        <a class="btn gold" id="card-link" target="_blank" rel="noopener noreferrer" hidden>Pay by card</a>
+        <p class="small muted" id="card-soon">Online card payment is coming soon — please use bank transfer or Whish for now.</p>
+      </article>
+
+      <article class="card method" id="bank">
+        <i data-icon="bank" class="ico big"></i>
+        <h3>Bank transfer</h3>
+        <dl class="bank" id="bank-details"></dl>
+        <p class="small">Write your <b>reservation code</b> (for example MH-ABC123) as the transfer reference and pay from an account in <b>your own name</b>. Payments with the right code, name and amount are confirmed automatically.</p>
+      </article>
+
+      <article class="card method">
+        <i data-icon="wallet" class="ico big"></i>
+        <h3>Whish Money</h3>
+        <p>Send the deposit to <b class="copyable" id="whish-no"></b> and add your reservation code in the note.</p>
+        <p class="small muted">Prefer cash? Bring it to the restaurant before the deadline.</p>
+      </article>
+    </div>
+  </section>
+
+  <form class="card" id="paid-form" novalidate hidden>
+    <h2>Already paid?</h2>
+    <p class="small muted">Tell us how you paid so the team can verify it. Your reservation stays safe while we check.</p>
+    <label for="pm">Payment method</label>
+    <select id="pm"><option value="bank">Bank transfer</option><option value="whish">Whish Money</option><option value="card">Card</option></select>
+    <label for="pref">Transfer reference / receipt number</label>
+    <input id="pref" maxlength="80" autocomplete="off">
+    <button class="btn wide" type="submit">I've paid — notify the team</button>
+    <p class="form-msg" id="paid-msg"></p>
+  </form>
+
+  <p class="secure"><i data-icon="lock"></i> Encrypted connection · we never collect card numbers on this site · only you and our team can see your reservation.</p>
+</main>
+
+<div id="toasts" class="toasts" aria-live="polite"></div>
+
+<dialog id="auth-dlg" class="dlg" aria-labelledby="auth-title">
+  <form id="auth-form" novalidate>
+    <button type="button" class="dlg-x" id="auth-close" aria-label="Close"><i data-icon="close"></i></button>
+    <img src="icons/icon.svg" alt="" width="54" height="54" class="dlg-logo">
+    <h2 id="auth-title">Welcome back</h2>
+    <div class="tabs" id="auth-tabs" role="tablist"><button type="button" role="tab" data-mode="in">Sign in</button><button type="button" role="tab" data-mode="up">Create account</button></div>
+    <div class="only-up" hidden>
+      <label for="a-name">Full name</label><input id="a-name" autocomplete="name" maxlength="80"><small class="field-err" id="e-name"></small>
+      <label for="a-phone">Phone number</label>
+      <div class="phone-row"><select id="a-cc" class="cc" aria-label="Country code"></select><input id="a-phone" type="tel" inputmode="tel" maxlength="16"></div>
+      <small class="field-err" id="e-phone"></small>
+    </div>
+    <div id="a-email-row"><label for="a-email">Email</label><input id="a-email" type="email" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="120"><small class="field-err" id="e-email"></small></div>
+    <div id="a-pass-row"><label for="a-pass" id="a-pass-label">Password</label>
+      <div class="pass-row"><input id="a-pass" type="password" autocomplete="current-password" maxlength="72"><button type="button" class="link" id="a-eye">Show</button></div>
+      <small class="field-err" id="e-pass"></small></div>
+    <button type="button" class="link right" id="a-forgot">Forgot password?</button>
+    <button class="btn wide" id="auth-go" type="submit">Sign in</button>
+    <p class="form-msg" id="auth-msg" role="status"></p>
+  </form>
+</dialog>
+
+<script src="js/vendor/supabase.js"></script>
+<script src="js/config.js"></script>
+<script src="js/core.js"></script>
+<script src="js/pay.js"></script>
+</body>
+</html>

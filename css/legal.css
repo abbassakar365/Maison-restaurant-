@@ -1,0 +1,11 @@
+/* Privacy policy and terms pages */
+.legal { max-width: 760px; margin: 0 auto; padding-block: 32px 64px; }
+.legal h1 { font-size: clamp(2rem, 6vw, 2.8rem); margin-bottom: 4px; }
+.legal .updated { color: var(--muted); margin-bottom: 24px; }
+.legal h2 { font-size: 1.5rem; margin: 28px 0 8px; }
+.legal p, .legal li { line-height: 1.65; }
+.legal ul { padding-left: 22px; display: grid; gap: 6px; }
+.legal table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: .95rem; }
+.legal th, .legal td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.legal th { background: var(--cream); color: var(--wine); }
+.legal .table-wrap { overflow-x: auto; }

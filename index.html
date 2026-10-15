@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://efwqkllaultepxprwert.supabase.co; connect-src 'self' https://efwqkllaultepxprwert.supabase.co wss://efwqkllaultepxprwert.supabase.co; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Maison Hamra — Brasserie française, Beirut</title>
+<meta name="description" content="French brasserie in Hamra, Beirut. Browse the menu, read reviews and reserve your table.">
+<meta name="theme-color" content="#5a1a24">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Lato:wght@400;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a class="skip" href="#menu">Skip to the menu</a>
+
+<header class="top" id="top">
+  <div class="top-row">
+    <a class="brand" href="#hero" aria-label="Maison Hamra — home">
+      <img src="icons/icon.svg" alt="" width="40" height="40">
+      <span><b>Maison Hamra</b><small>Brasserie française · Beirut</small></span>
+    </a>
+    <div class="tools">
+      <div class="bell-wrap">
+        <button id="bell" class="icon-btn" type="button" aria-label="Notifications" aria-haspopup="true" aria-expanded="false" aria-controls="notif-panel">
+          <i data-icon="bell"></i><span id="badge" class="badge" hidden>0</span>
+        </button>
+        <div id="notif-panel" class="panel" hidden>
+          <div class="panel-head"><strong>Notifications</strong><button id="read-all" type="button" class="link">Mark all read</button></div>
+          <button id="alerts-btn" type="button" class="btn small gold" hidden>Turn on phone alerts &amp; sound</button>
+          <ul id="notif-list" class="notif-list"></ul>
+        </div>
+      </div>
+      <button id="account" class="icon-btn acct" type="button" aria-label="Sign in"><i data-icon="user"></i><span id="account-label">Sign in</span></button>
+    </div>
+  </div>
+  <nav class="nav" aria-label="Sections">
+    <a href="#menu" data-sec="menu">Menu</a>
+    <a href="#reserve" data-sec="reserve">Reserve</a>
+    <a href="#about" data-sec="about">About</a>
+    <a href="#contact" data-sec="contact">Contact us</a>
+    <a href="#reviews" data-sec="reviews">Reviews</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" id="hero">
+    <div class="wrap">
+      <p class="eyebrow">Depuis Hamra, avec amour</p>
+      <h1>A Parisian brasserie<br>in the heart of Beirut</h1>
+      <p class="lede">Classic French cooking, halal meat, no alcohol, fresh pastries and a warm welcome — from long lunches to late dinners.</p>
+      <div class="hero-cta"><a class="btn gold" href="#reserve">Reserve a table</a><a class="btn ghost" href="#menu">See the menu</a></div>
+    </div>
+  </section>
+
+  <!-- 1. Menu + reviews -->
+  <section id="menu" class="sec">
+    <div class="wrap">
+      <header class="sec-head"><p class="eyebrow">La carte</p><h2>Our Menu</h2>
+        <p class="hint">Hover over or tap any dish or drink to see what's inside.</p></header>
+      <div class="cats" id="cats" role="tablist" aria-label="Menu categories"></div>
+      <p class="cat-note" id="cat-note"></p>
+      <div class="dishes" id="dishes" role="tabpanel"></div>
+      <p class="legend"><span class="tag tag-h">Halal</span><span class="tag tag-v">Vegetarian</span><span class="tag tag-s">Spicy</span></p>
+
+      <div id="reviews" class="reviews">
+        <header class="sec-head"><p class="eyebrow">Ce qu'ils disent</p><h2>Reviews</h2><p class="hint" id="avg">Be the first to leave a review.</p></header>
+        <form id="review-form" class="card review-form" novalidate>
+          <fieldset class="stars" id="stars"><legend>Your rating</legend></fieldset>
+          <label for="review-text" class="sr">Your review</label>
+          <textarea id="review-text" rows="2" maxlength="600" placeholder="Tell us about your visit… (press Enter to post)"></textarea>
+          <div class="row-end"><span class="form-msg" id="review-msg"></span><button class="btn" type="submit">Post review</button></div>
+        </form>
+        <ul class="review-list" id="review-list"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Reservation -->
+  <section id="reserve" class="sec alt">
+    <div class="wrap">
+      <header class="sec-head"><p class="eyebrow">Réservation</p><h2>Reserve a Table</h2><p class="hint">Reservations accepted from <b data-rule="hours">12:00 to 23:00</b>, every day. We confirm every request, then call you on the day for final approval.</p></header>
+      <div class="reserve-grid">
+        <form id="res-form" class="card" novalidate>
+          <div class="grid2">
+            <div><label for="r-name">Full name</label><input id="r-name" autocomplete="name" maxlength="80" required><small class="field-err" id="re-name"></small></div>
+            <div><label for="r-phone">Phone number</label>
+              <div class="phone-row"><select id="r-cc" class="cc" aria-label="Country code"></select><input id="r-phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="00 000 000" maxlength="16" required></div>
+              <small class="field-err" id="re-phone"></small></div>
+            <div><label for="r-guests">Number of guests</label>
+              <div class="stepper"><button type="button" id="g-minus" aria-label="Fewer guests">−</button><input id="r-guests" type="number" min="1" max="30" value="2" inputmode="numeric"><button type="button" id="g-plus" aria-label="More guests">+</button></div>
+              <small class="field-err" id="re-guests"></small></div>
+            <div><label for="r-date">Date</label><select id="r-date" required></select><small class="field-err" id="re-date"></small></div>
+            <div><label for="r-time">Time</label><select id="r-time" required></select><small class="field-err" id="re-time"></small></div>
+            <div><label for="r-menu">Set menu <span class="opt">(optional)</span></label><select id="r-menu"><option value="">No set menu — order à la carte</option></select><small class="muted small" id="menu-courses"></small></div>
+          </div>
+          <label for="r-notes">Notes <span class="opt">(optional — allergies, occasion, seating)</span></label>
+          <textarea id="r-notes" rows="2" maxlength="500"></textarea>
+
+          <div class="summary" id="summary" hidden>
+            <div><span>Set menu total</span><b id="sum-total">$0</b></div>
+            <div class="deposit-line" id="deposit-line" hidden><span>Deposit to secure the table (<span data-rule="percent">25%</span>)</span><b id="sum-deposit">$0</b></div>
+            <p class="small" id="deposit-note" hidden>Set menus <span data-rule="deposit">over $300 need a 25% deposit</span>. After you confirm, use <b>Pay deposit</b> to pay by card, bank transfer or Whish. Unpaid deposits cancel automatically at the deadline.</p>
+          </div>
+
+          <button class="btn gold wide" id="res-go" type="submit">Confirm reservation</button>
+          <p class="form-msg" id="res-msg" role="status"></p>
+        </form>
+
+        <aside class="card mine" id="mine-box">
+          <h3>My reservations</h3>
+          <p class="small muted" id="mine-signed-out">Sign in to reserve and keep all your reservation codes in your profile.</p>
+          <button class="btn small" id="mine-signin" type="button">Sign in or create account</button>
+          <ul class="res-list" id="mine-list"></ul>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. About -->
+  <section id="about" class="sec">
+    <div class="wrap">
+      <header class="sec-head"><p class="eyebrow">La maison</p><h2>About Us</h2></header>
+      <div class="about-grid">
+        <article class="card">
+          <h3>How it works</h3>
+          <ol class="steps">
+            <li><b>Reserve</b> online from <span data-rule="hours">12:00 to 23:00</span> with your name, phone, guests, date and time — add a set menu if you like. Times that are fully booked are marked in the list.</li>
+            <li><b>We confirm</b> — the team reviews your request and you get a notification.</li>
+            <li><b>Deposit</b> — set menus <span data-rule="deposit">over $300 need a 25% deposit</span>, paid before the deadline shown on your reservation.</li>
+            <li><b>On the day</b> — you and the team both get a morning reminder; we call to give the final approval.</li>
+            <li><b>After your meal</b> — we ask what you loved and what we can do better.</li>
+          </ol>
+        </article>
+        <article class="card">
+          <h3>What we serve</h3>
+          <p>French brasserie classics — soupe à l'oignon, steak frites, bœuf bourguignon, coq au vin, bouillabaisse — plus sandwiches, a French-Lebanese mezza table, house pastries, coffee, fresh juices and mocktails. Open every day from noon until midnight.</p>
+        </article>
+        <article class="card">
+          <h3>Alcohol-free</h3>
+          <p>Maison Hamra is <b>100% alcohol-free</b>. We serve no alcoholic drinks, and no wine, spirits or liqueur is used in any dish or dessert — our French classics are cooked with stocks, juices and herbs instead.</p>
+        </article>
+        <article class="card">
+          <h3>Halal</h3>
+          <p>All our <b>beef and chicken are halal</b>, from certified suppliers. There is <b>no pork</b> anywhere on our menu or in our kitchen — where a French classic calls for ham or bacon, we use halal smoked beef. Seafood, duck and snails are not marked halal on the menu.</p>
+        </article>
+        <article class="card cert">
+          <i data-icon="shield" class="ico big"></i>
+          <div>
+            <h3>Food safety certificate</h3>
+            <p>Our kitchen follows HACCP food-safety practices, and our team is trained in food hygiene. The certificate is displayed at the entrance.</p>
+            <p class="small muted">Certificate no. <b>— to be added —</b> · Valid until <b>— to be added —</b></p>
+          </div>
+        </article>
+        <article class="card">
+          <h3>Payments &amp; security</h3>
+          <ul class="pay-list">
+            <li><i data-icon="card"></i> Card — through a secure hosted checkout; we never see or store your card number.</li>
+            <li><i data-icon="bank"></i> Bank transfer — <a href="pay.html#bank">bank payment details</a></li>
+            <li><i data-icon="wallet"></i> Whish Money · Cash at the restaurant</li>
+            <li><i data-icon="lock"></i> Accounts and reservations are protected by encrypted connections and per-customer access rules.</li>
+          </ul>
+        </article>
+        <article class="card install-card">
+          <img src="icons/icon-192.png" alt="" width="64" height="64">
+          <div class="install-text">
+            <h3>Get the Maison Hamra app</h3>
+            <p>Install it on your phone or computer: one tap to reserve, and alerts when your table is confirmed.</p>
+          </div>
+          <button type="button" class="btn gold install-btn" data-install><i data-icon="download"></i><span>Install the app</span></button>
+          <p class="small install-help" hidden></p>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer id="contact" class="foot">
+  <div class="wrap">
+    <h2>Contact Us</h2>
+    <p class="foot-addr" data-cfg="address"></p>
+    <div class="socials">
+      <a id="f-phone" class="soc" aria-label="Call us"><i data-icon="phone"></i></a>
+      <span id="f-insta" class="soc" role="img" aria-label="Instagram (coming soon)"><i data-icon="instagram"></i></span>
+      <a id="f-map" class="soc" target="_blank" rel="noopener noreferrer" aria-label="Location on Google Maps"><i data-icon="pin"></i></a>
+    </div>
+    <p class="foot-phone" data-cfg="phone"></p>
+    <p class="small" data-cfg="hours"></p>
+    <p class="foot-links"><a href="pay.html#bank">Bank payments</a> · <a href="privacy.html">Privacy policy</a> · <a href="terms.html">Terms</a></p>
+    <p class="small muted-light">© <span id="year"></span> Maison Hamra. All rights reserved.</p>
+  </div>
+</footer>
+
+<div id="toasts" class="toasts" aria-live="polite"></div>
+
+<!-- sign in / sign up -->
+<dialog id="auth-dlg" class="dlg" aria-labelledby="auth-title">
+  <form id="auth-form" novalidate>
+    <button type="button" class="dlg-x" id="auth-close" aria-label="Close"><i data-icon="close"></i></button>
+    <img src="icons/icon.svg" alt="" width="54" height="54" class="dlg-logo">
+    <h2 id="auth-title">Welcome back</h2>
+    <div class="tabs" id="auth-tabs" role="tablist">
+      <button type="button" role="tab" data-mode="in">Sign in</button>
+      <button type="button" role="tab" data-mode="up">Create account</button>
+    </div>
+    <div class="only-up" hidden>
+      <label for="a-name">Full name</label><input id="a-name" autocomplete="name" maxlength="80"><small class="field-err" id="e-name"></small>
+      <label for="a-phone">Phone number</label>
+      <div class="phone-row"><select id="a-cc" class="cc" aria-label="Country code"></select><input id="a-phone" type="tel" inputmode="tel" autocomplete="tel-national" maxlength="16"></div>
+      <small class="field-err" id="e-phone"></small>
+    </div>
+    <div id="a-email-row"><label for="a-email">Email</label><input id="a-email" type="email" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="120"><small class="field-err" id="e-email"></small></div>
+    <div id="a-pass-row"><label for="a-pass" id="a-pass-label">Password</label>
+      <div class="pass-row"><input id="a-pass" type="password" autocomplete="current-password" maxlength="72"><button type="button" class="link" id="a-eye">Show</button></div>
+      <small class="field-err" id="e-pass"></small></div>
+    <button type="button" class="link right" id="a-forgot">Forgot password?</button>
+    <p class="small muted only-up consent" hidden>By creating an account you agree to our <a href="terms.html" target="_blank" rel="noopener">Terms</a> and <a href="privacy.html" target="_blank" rel="noopener">Privacy policy</a>.</p>
+    <button class="btn wide" id="auth-go" type="submit">Sign in</button>
+    <p class="form-msg" id="auth-msg" role="status"></p>
+  </form>
+</dialog>
+
+<!-- profile -->
+<dialog id="acct-dlg" class="dlg" aria-labelledby="acct-title">
+  <div>
+    <button type="button" class="dlg-x" data-close aria-label="Close"><i data-icon="close"></i></button>
+    <h2 id="acct-title">My profile</h2>
+    <dl class="profile" id="profile"></dl>
+    <h3>My reservation codes</h3>
+    <ul class="res-list" id="acct-list"></ul>
+    <button type="button" class="btn ghost-dark wide" id="sign-out">Sign out</button>
+  </div>
+</dialog>
+
+<!-- cancel -->
+<dialog id="cancel-dlg" class="dlg" aria-labelledby="cancel-title">
+  <form id="cancel-form" novalidate>
+    <button type="button" class="dlg-x" data-close aria-label="Close"><i data-icon="close"></i></button>
+    <h2 id="cancel-title">Cancel reservation?</h2>
+    <p id="cancel-what"></p>
+    <label for="cancel-reason">Reason <span class="opt">(optional)</span></label>
+    <textarea id="cancel-reason" rows="2" maxlength="300"></textarea>
+    <div class="row-end"><button type="button" class="btn ghost-dark" data-close>Keep it</button><button class="btn danger" type="submit">Cancel reservation</button></div>
+    <p class="form-msg" id="cancel-msg"></p>
+  </form>
+</dialog>
+
+<!-- after-visit feedback -->
+<dialog id="fb-dlg" class="dlg wide" aria-labelledby="fb-title">
+  <form id="fb-form" novalidate>
+    <button type="button" class="dlg-x" data-close aria-label="Close"><i data-icon="close"></i></button>
+    <h2 id="fb-title">How was your visit?</h2>
+    <p class="small muted" id="fb-what"></p>
+    <fieldset class="stars" id="fb-stars"><legend>Overall rating</legend></fieldset>
+    <label for="fb-loved">What did you love?</label><textarea id="fb-loved" rows="2" maxlength="800"></textarea>
+    <p class="fb-sub">Was there anything you didn't like about…</p>
+    <label for="fb-service">The service</label><textarea id="fb-service" rows="2" maxlength="800"></textarea>
+    <label for="fb-food">The food &amp; beverages</label><textarea id="fb-food" rows="2" maxlength="800"></textarea>
+    <label for="fb-place">The place</label><textarea id="fb-place" rows="2" maxlength="800"></textarea>
+    <label for="fb-other">Anything else</label><textarea id="fb-other" rows="2" maxlength="800"></textarea>
+    <button class="btn gold wide" type="submit">Send feedback</button>
+    <p class="form-msg" id="fb-msg"></p>
+  </form>
+</dialog>
+
+<script src="js/vendor/supabase.js"></script>
+<script src="js/config.js"></script>
+<script src="js/menu.js"></script>
+<script src="js/core.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

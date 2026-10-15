@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://efwqkllaultepxprwert.supabase.co; connect-src 'self' https://efwqkllaultepxprwert.supabase.co wss://efwqkllaultepxprwert.supabase.co; base-uri 'self'; form-action 'self'">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Maison Hamra Team</title>
+<meta name="theme-color" content="#2a211d">
+<link rel="icon" href="../icons/team.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/team-touch.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Lato:wght@400;700&display=swap">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/team.css">
+</head>
+<body class="team">
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="./"><img src="../icons/team.svg" alt="" width="40" height="40"><span><b>Maison Hamra</b><small>Team dashboard</small></span></a>
+    <div class="tools">
+      <div class="bell-wrap">
+        <button id="bell" class="icon-btn" type="button" aria-label="Notifications" aria-haspopup="true" aria-expanded="false" aria-controls="notif-panel"><i data-icon="bell"></i><span id="badge" class="badge" hidden>0</span></button>
+        <div id="notif-panel" class="panel" hidden>
+          <div class="panel-head"><strong>Team notifications</strong><button id="read-all" type="button" class="link">Mark all read</button></div>
+          <button id="alerts-btn" type="button" class="btn small gold" hidden>Turn on alerts &amp; sound</button>
+          <ul id="notif-list" class="notif-list"></ul>
+        </div>
+      </div>
+      <a class="icon-btn site-link" href="../" target="_blank" rel="noopener">Customer site</a>
+      <button id="team-out" class="icon-btn" type="button" hidden>Sign out</button>
+    </div>
+  </div>
+  <nav class="nav" id="team-tabs" aria-label="Dashboard" hidden>
+    <a href="#reservations" data-tab="reservations">Reservations</a>
+    <a href="#notifications" data-tab="notifications">Notifications</a>
+    <a href="#customers" data-tab="customers">Customers</a>
+    <a href="#noshows" data-tab="noshows">No-show list</a>
+    <a href="#feedback" data-tab="feedback">Feedback</a>
+    <a href="#menu" data-tab="menu">Menu</a>
+    <a href="#autopilot" data-tab="autopilot">Auto-pilot</a>
+    <a href="#calls" data-tab="calls">Calls</a>
+    <a href="#settings" data-tab="settings">Settings</a>
+  </nav>
+</header>
+
+<main class="wrap team-main">
+  <section id="gate" class="card gate">
+    <h1>Team sign in</h1>
+    <p class="muted">This page is for Maison Hamra staff only.</p>
+    <button class="btn wide" type="button" id="gate-signin">Sign in</button>
+    <p class="form-msg err" id="gate-msg"></p>
+  </section>
+
+  <section id="tab-reservations" class="tab" hidden>
+    <div class="toolbar">
+      <div class="chips" id="res-filter">
+        <button type="button" data-f="today" aria-pressed="true">Today</button>
+        <button type="button" data-f="upcoming">Upcoming</button>
+        <button type="button" data-f="action">Needs action</button>
+        <button type="button" data-f="cancelled">Cancelled</button>
+        <button type="button" data-f="past">Past</button>
+        <button type="button" data-f="all">All</button>
+      </div>
+      <input type="search" id="res-search" placeholder="Search name, phone or code" aria-label="Search reservations">
+    </div>
+    <p class="muted small" id="res-count"></p>
+    <ul class="t-list" id="res-list"></ul>
+  </section>
+
+  <section id="tab-notifications" class="tab" hidden>
+    <h2>Notifications</h2>
+    <ul class="notif-list big" id="team-notifs"></ul>
+  </section>
+
+  <section id="tab-customers" class="tab" hidden>
+    <h2>Customers</h2>
+    <p class="muted small"><span class="flag orange">Orange</span> = 3 or more no-shows · <span class="flag red">Red</span> = 3 or more unpaid deposits. The numbers show how many times.</p>
+    <input type="search" id="cust-search" placeholder="Search customers" aria-label="Search customers">
+    <div class="table-wrap"><table class="t-table" id="cust-table">
+      <thead><tr><th>Customer</th><th>Phone</th><th>Reservations</th><th>No-shows</th><th>Unpaid</th></tr></thead><tbody></tbody>
+    </table></div>
+  </section>
+
+  <section id="tab-noshows" class="tab" hidden>
+    <h2>No-show &amp; unpaid list</h2>
+    <p class="muted small">Only the team can see this list.</p>
+    <ul class="t-list" id="noshow-list"></ul>
+  </section>
+
+  <section id="tab-feedback" class="tab" hidden>
+    <h2>Guest feedback</h2>
+    <ul class="t-list" id="fb-list"></ul>
+  </section>
+  <section id="tab-menu" class="tab" hidden>
+    <div class="menu-head">
+      <h2>Menu editor</h2>
+      <p class="muted small">Changes show on the customer site straight away. Untick “On the menu” to hide a dish without deleting it.</p>
+    </div>
+    <div class="chips" id="me-cats" role="tablist" aria-label="Menu categories"></div>
+    <div class="cat-edit card" id="me-cat-edit"></div>
+    <div class="toolbar">
+      <button type="button" class="btn small" id="me-add">+ Add a dish</button>
+      <button type="button" class="btn small ghost-dark" id="me-add-cat">+ New category</button>
+      <input type="search" id="me-search" placeholder="Search dishes" aria-label="Search dishes">
+    </div>
+    <ul class="me-list" id="me-list"></ul>
+  </section>
+
+  <section id="tab-autopilot" class="tab" hidden>
+    <h2>Auto-pilot</h2>
+    <p class="muted small">Rules that run by themselves, every time a booking or payment arrives and every 5 minutes. Everything they do is listed below and sent to the team as a notification.</p>
+    <form class="card ap-switches" id="ap-form">
+      <label class="switch"><input type="checkbox" id="ap-confirm"><span><b>Accept reservations</b><small>Confirms a booking straight away when a table is free, the deposit (if any) is paid, and the customer is not flagged orange or red. Flagged customers are left for you.</small></span></label>
+      <label class="switch"><input type="checkbox" id="ap-deposits"><span><b>Check deposits</b><small>When the bank or payment provider reports a payment, it checks the reservation code, the payer's name and the amount. If all three match, the deposit is marked paid and the booking confirmed. Otherwise it asks you to check.</small></span></label>
+      <label class="switch"><input type="checkbox" id="ap-full"><span><b>Handle full tables</b><small>When a time is fully booked, it declines the request and sends the customer the best and earliest free times. If pending bookings no longer fit (for example after you lower the table count), it releases the newest ones the same way.</small></span></label>
+      <div class="row-end"><span class="form-msg" id="ap-msg"></span><button class="btn" type="submit">Save</button></div>
+    </form>
+
+    <div class="ap-grid">
+      <form class="card" id="ap-test" novalidate>
+        <h3>Test a payment</h3>
+        <p class="small muted">Pretend the bank sent a payment, to see what the Auto-pilot does. Use a real reservation code with a deposit due.</p>
+        <label for="t-code">Reservation code</label><input id="t-code" placeholder="MH-ABC123" maxlength="9" autocapitalize="characters">
+        <label for="t-name">Payer's name</label><input id="t-name" maxlength="80">
+        <label for="t-amount">Amount ($)</label><input id="t-amount" type="number" min="0" step="0.01">
+        <button class="btn wide" type="submit">Send test payment</button>
+        <p class="form-msg" id="t-msg"></p>
+      </form>
+      <div class="card">
+        <h3>Bank connection</h3>
+        <p class="small">Your bank or payment provider sends each payment to this address. The restaurant's developer gives them the signing key.</p>
+        <p class="code-box" id="ap-url">https://efwqkllaultepxprwert.supabase.co/functions/v1/payment-webhook</p>
+        <h3 class="sub-h3">Latest payments</h3>
+        <ul class="ap-pay" id="ap-payments"></ul>
+      </div>
+    </div>
+
+    <h3 class="sub-h">Activity</h3>
+    <ul class="ap-log" id="ap-log"></ul>
+  </section>
+
+  <section id="tab-calls" class="tab" hidden>
+    <h2>Phone calls</h2>
+    <p class="muted small">The phone Auto-pilot answers the restaurant's number, books tables after the guest confirms the details, and puts the call through to the team phone when the guest asks for a person. Every call is listed below with what was said.</p>
+    <form class="card ap-switches" id="ph-form" novalidate>
+      <label class="switch"><input type="checkbox" id="ph-enabled"><span><b>Answer calls with the Auto-pilot</b><small>When this is off, every call rings the team phone straight away.</small></span></label>
+      <div class="grid3">
+        <div><label for="ph-team">Team phone for transfers</label><input id="ph-team" type="tel" placeholder="+9613123456" inputmode="tel" autocomplete="off"></div>
+        <div><label for="ph-lang">Greeting language</label><select id="ph-lang"><option value="en">English</option><option value="fr">Français</option><option value="ar">العربية</option></select></div>
+      </div>
+      <p class="small muted">Use the international format, for example +961 3 123 456. The Auto-pilot switches to French or Arabic by itself when the guest speaks it.</p>
+      <div class="row-end"><span class="form-msg" id="ph-msg"></span><button class="btn" type="submit">Save</button></div>
+    </form>
+    <div class="toolbar">
+      <div class="chips" id="call-filter">
+        <button type="button" data-f="all" aria-pressed="true">All</button>
+        <button type="button" data-f="live">Live now</button>
+        <button type="button" data-f="booked">Booked</button>
+        <button type="button" data-f="team">Call back / team</button>
+      </div>
+    </div>
+    <ul class="call-list" id="call-list"></ul>
+  </section>
+
+  <section id="tab-settings" class="tab" hidden>
+    <h2>Restaurant settings</h2>
+    <div class="card install-card team-install">
+      <img src="../icons/team-192.png" alt="" width="64" height="64">
+      <div class="install-text">
+        <h3>Install the team app</h3>
+        <p class="small">Put MH Team on this phone or computer, with its own icon, so new bookings and payments reach you like any other app.</p>
+      </div>
+      <button type="button" class="btn install-btn" data-install><i data-icon="download"></i><span>Install the team app</span></button>
+      <p class="small install-help" hidden></p>
+    </div>
+    <form class="card settings" id="set-form" novalidate>
+      <h3>Tables</h3>
+      <div class="grid3">
+        <div><label for="s-tables">Number of tables</label><input id="s-tables" type="number" min="1" max="500" required></div>
+        <div><label for="s-seats">Seats per table</label><input id="s-seats" type="number" min="1" max="20" required></div>
+        <div><label for="s-sitting">Table time (minutes)</label><input id="s-sitting" type="number" min="30" max="360" step="15" required></div>
+      </div>
+      <p class="small muted">A booking takes one table per <span id="s-seats-txt">4</span> guests for the table time. When every table is taken, that time shows as fully booked.</p>
+      <h3>Reservation hours</h3>
+      <div class="grid3">
+        <div><label for="s-open">First booking</label><input id="s-open" type="time" step="1800" required></div>
+        <div><label for="s-last">Last booking</label><input id="s-last" type="time" step="1800" required></div>
+      </div>
+      <h3>Deposit</h3>
+      <div class="grid3">
+        <div><label for="s-threshold">Set menu total over ($)</label><input id="s-threshold" type="number" min="0" step="1" required></div>
+        <div><label for="s-percent">Deposit (%)</label><input id="s-percent" type="number" min="0" max="100" step="1" required></div>
+      </div>
+      <div class="row-end"><span class="form-msg" id="set-msg"></span><button class="btn" type="submit">Save settings</button></div>
+    </form>
+    <h3 class="sub-h">Set menus</h3>
+    <ul class="me-list" id="setmenu-list"></ul>
+  </section>
+</main>
+
+<div id="toasts" class="toasts" aria-live="polite"></div>
+
+<dialog id="auth-dlg" class="dlg" aria-labelledby="auth-title">
+  <form id="auth-form" novalidate>
+    <button type="button" class="dlg-x" id="auth-close" aria-label="Close"><i data-icon="close"></i></button>
+    <img src="../icons/icon.svg" alt="" width="54" height="54" class="dlg-logo">
+    <h2 id="auth-title">Team sign in</h2>
+    <div class="tabs" id="auth-tabs" role="tablist"><button type="button" role="tab" data-mode="in">Sign in</button><button type="button" role="tab" data-mode="up">Create account</button></div>
+    <div class="only-up" hidden>
+      <label for="a-name">Full name</label><input id="a-name" autocomplete="name" maxlength="80"><small class="field-err" id="e-name"></small>
+      <label for="a-phone">Phone number</label>
+      <div class="phone-row"><select id="a-cc" class="cc" aria-label="Country code"></select><input id="a-phone" type="tel" inputmode="tel" maxlength="16"></div>
+      <small class="field-err" id="e-phone"></small>
+    </div>
+    <div id="a-email-row"><label for="a-email">Email</label><input id="a-email" type="email" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="120"><small class="field-err" id="e-email"></small></div>
+    <div id="a-pass-row"><label for="a-pass" id="a-pass-label">Password</label>
+      <div class="pass-row"><input id="a-pass" type="password" autocomplete="current-password" maxlength="72"><button type="button" class="link" id="a-eye">Show</button></div>
+      <small class="field-err" id="e-pass"></small></div>
+    <button type="button" class="link right" id="a-forgot">Forgot password?</button>
+    <button class="btn wide" id="auth-go" type="submit">Sign in</button>
+    <p class="form-msg" id="auth-msg" role="status"></p>
+  </form>
+</dialog>
+
+<dialog id="dish-dlg" class="dlg wide" aria-labelledby="dish-title">
+  <form id="dish-form" novalidate>
+    <button type="button" class="dlg-x" data-close aria-label="Close"><i data-icon="close"></i></button>
+    <h2 id="dish-title">Edit dish</h2>
+    <div class="dish-edit">
+      <div class="photo-box">
+        <div class="photo-preview" id="d-preview"></div>
+        <label class="btn small ghost-dark file-btn" for="d-photo">Upload photo</label>
+        <input id="d-photo" type="file" accept="image/jpeg,image/png,image/webp" class="sr">
+        <button type="button" class="link small" id="d-photo-remove">Remove photo</button>
+        <p class="small muted">JPG, PNG or WebP, up to 5 MB.</p>
+      </div>
+      <div class="grid2">
+        <div><label for="d-name">Name</label><input id="d-name" maxlength="120" required></div>
+        <div><label for="d-cat">Category</label><select id="d-cat"></select></div>
+        <div><label for="d-price">Price ($)</label><input id="d-price" type="number" min="0" step="0.5" required></div>
+        <div><label for="d-pic">Picture when there is no photo</label><input id="d-pic" maxlength="8" placeholder="🍽️"></div>
+      </div>
+    </div>
+    <label for="d-ingr">Ingredients <span class="opt">(separate with commas)</span></label>
+    <textarea id="d-ingr" rows="3" maxlength="600"></textarea>
+    <fieldset class="checks"><legend>Labels</legend>
+      <label><input type="checkbox" id="d-h"> Halal</label>
+      <label><input type="checkbox" id="d-v"> Vegetarian</label>
+      <label><input type="checkbox" id="d-s"> Spicy</label>
+      <label><input type="checkbox" id="d-avail"> On the menu</label>
+    </fieldset>
+    <div class="row-end">
+      <button type="button" class="btn danger small" id="d-delete">Delete dish</button>
+      <span class="form-msg" id="d-msg"></span>
+      <button class="btn" type="submit">Save</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="cancel-dlg" class="dlg" aria-labelledby="cancel-title">
+  <form id="cancel-form" novalidate>
+    <button type="button" class="dlg-x" data-close aria-label="Close"><i data-icon="close"></i></button>
+    <h2 id="cancel-title">Cancel this reservation?</h2>
+    <p id="cancel-what"></p>
+    <label for="cancel-reason">Reason for the customer</label>
+    <textarea id="cancel-reason" rows="2" maxlength="300"></textarea>
+    <div class="row-end"><button type="button" class="btn ghost-dark" data-close>Keep it</button><button class="btn danger" type="submit">Cancel &amp; notify</button></div>
+    <p class="form-msg" id="cancel-msg"></p>
+  </form>
+</dialog>
+
+<script src="../js/vendor/supabase.js"></script>
+<script src="../js/config.js"></script>
+<script src="../js/core.js"></script>
+<script src="../js/team.js"></script>
+</body>
+</html>
