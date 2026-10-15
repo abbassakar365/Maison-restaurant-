@@ -112,9 +112,10 @@ The team app's **Calls** tab lists every call with its full transcript (live cal
 **How it works:** SignalWire receives the call and sends what the guest says to the `voice` Edge Function (`supabase/functions/voice`). The function asks Claude (Anthropic's AI model) what to answer, runs the booking tools against the database, and replies with what the phone should say, in cXML (the same call language Twilio uses, so a Twilio number works too). The database side is in `sql/phone_autopilot.sql`.
 
 **Setup:**
-1. **SignalWire:** create an account at signalwire.com and a Space, then buy a phone number with voice (or forward the restaurant's line to it). In Phone Numbers → your number → Edit settings, set **Handle calls using** to *LaML/cXML Webhooks* and:
-   - **When a call comes in:** `https://efwqkllaultepxprwert.supabase.co/functions/v1/voice` (POST)
-   - **Status change callback:** `https://efwqkllaultepxprwert.supabase.co/functions/v1/voice?step=status`
+1. **SignalWire:** create an account at signalwire.com and a Space, then buy a phone number with voice (or forward the restaurant's line to it). Then:
+   - **My Resources → + Add → Script → cXML Script** (not SWML). Name it "Maison phone", set **Handle Calls Using** to *External URL* and **Primary Script URL** to `https://efwqkllaultepxprwert.supabase.co/functions/v1/voice`, then Create.
+   - **Phone Numbers → your number → Edit Settings → Inbound Call Settings → Assign Resource**, pick "Maison phone" and save.
+   - (Twilio instead: "A call comes in" webhook = the same URL, POST; status callback = the same URL with `?step=status`.)
 2. **Claude:** create an API key at platform.claude.com.
 3. **Store both keys in Supabase Vault** (SQL editor), never in this repository:
    ```sql

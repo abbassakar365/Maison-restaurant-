@@ -1,9 +1,10 @@
 // Maison Hamra — phone Auto-pilot. Answers calls, books tables, puts guests through to the team.
 //
-// Phone provider: SignalWire (or Twilio; both speak the same call XML). On the phone number set
-//   Handle calls using: LaML/cXML Webhooks
-//   When a call comes in:    https://efwqkllaultepxprwert.supabase.co/functions/v1/voice   (POST)
-//   Status change callback:  https://efwqkllaultepxprwert.supabase.co/functions/v1/voice?step=status
+// Phone provider: SignalWire (or Twilio; both speak the same call XML). In SignalWire:
+//   My Resources → + Add → Script → cXML Script, Handle calls using: External URL,
+//   Primary Script URL: https://efwqkllaultepxprwert.supabase.co/functions/v1/voice
+//   then Phone Numbers → the number → Edit Settings → Inbound Call Settings → Assign Resource → that script.
+//   (Twilio: "A call comes in" webhook = same URL, POST; status callback = same URL + ?step=status.)
 // Every request must be signed by the provider (X-SignalWire-Signature or X-Twilio-Signature), checked
 // with the key in Supabase Vault: `phone_signing_key` (SignalWire Signing Key) or `twilio_auth_token`.
 // Claude's API key is in Vault as `anthropic_api_key`.
