@@ -10,7 +10,7 @@ select vault.create_secret('<SignalWire Signing Key>', 'phone_signing_key');   -
 
 -- 2. Make yourself a team member (sign up on the website first with this email)
 insert into public.staff (user_id)
-select id from auth.users where email = '<your email>'
+select id from auth.users where email = 'abbassakar365@gmail.com'
 on conflict do nothing;
 
 -- 3. Remove the setup test booking, test call and a leftover test table
