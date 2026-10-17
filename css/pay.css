@@ -1,20 +1,23 @@
 /* Deposit payment page */
-.pay-main { padding-top: 28px; padding-bottom: 60px; display: grid; gap: 22px; }
-.due { text-align: center; border-top: 4px solid var(--gold); }
-.due h1 { font-size: clamp(2.6rem, 10vw, 4rem); color: var(--wine); }
-.due p { margin-top: 6px; }
-.countdown { font-weight: 700; color: var(--warn); display: inline-flex; gap: 6px; align-items: center; justify-content: center; flex-wrap: wrap; }
-.due .pill { display: inline-block; margin-top: 12px; }
-.dep-due { background: #fff1d6; color: var(--warn); } .dep-review { background: #fde9c2; color: #7a4b00; }
-.dep-paid { background: #e3f0e5; color: var(--ok); } .dep-expired, .dep-none { background: #f3ece0; color: var(--muted); }
-.methods h2, #paid-form h2 { font-size: 2rem; margin-bottom: 12px; }
-.method-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
-.method { display: grid; gap: 8px; align-content: start; scroll-margin-top: calc(var(--head-h) + 20px); }
-.method:target { box-shadow: 0 0 0 3px var(--gold), var(--shadow); }
+.pay-main { padding-top: 36px; padding-bottom: 72px; display: grid; gap: 24px; }
+.pay-main > .sec-head { margin-bottom: 0; }
+.due { text-align: center; border-top: 3px solid var(--gold); }
+.due h1 { font-size: clamp(3rem, 10vw, 4.6rem); color: var(--wine); margin-top: 6px; }
+.due p { margin-top: 8px; }
+.countdown { font-weight: 500; color: var(--warn); display: inline-flex; gap: 6px; align-items: center; justify-content: center; flex-wrap: wrap; }
+.countdown .ico { width: 18px; height: 18px; }
+.due .pill { display: inline-block; margin-top: 14px; }
+#pay-info { text-align: center; color: var(--muted); }
+.methods h2, #paid-form h2 { font-size: 2.1rem; margin-bottom: 16px; }
+.method-grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); }
+.method { display: grid; gap: 10px; align-content: start; scroll-margin-top: calc(var(--head-h) + 20px); }
+.method:target { box-shadow: 0 0 0 2px var(--gold), var(--shadow-s); }
 .method .btn { justify-self: start; }
-.bank { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; font-size: .92rem; }
-.bank dt { font-weight: 700; color: var(--muted); }
-.bank dd { margin: 0; display: flex; gap: 8px; align-items: center; justify-content: space-between; flex-wrap: wrap; overflow-wrap: anywhere; font-family: ui-monospace, Menlo, Consolas, monospace; }
-#paid-form { max-width: 560px; width: 100%; margin: 0 auto; }
-.secure { display: flex; gap: 8px; align-items: center; justify-content: center; text-align: center; color: var(--muted); font-size: .88rem; flex-wrap: wrap; }
-.secure .ico { color: var(--ok); }
+.method h3 { margin: 0; }
+.bank { display: grid; grid-template-columns: auto 1fr; gap: 8px 14px; font-size: 0.92rem; }
+.bank dt { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
+.bank dd { display: flex; gap: 8px; align-items: center; justify-content: space-between; flex-wrap: wrap; overflow-wrap: anywhere; font-family: var(--mono); }
+.copyable { font-family: var(--mono); }
+#paid-form { max-width: 580px; width: 100%; margin: 0 auto; }
+.secure { display: flex; gap: 8px; align-items: center; justify-content: center; text-align: center; color: var(--muted); font-size: 0.86rem; flex-wrap: wrap; }
+.secure .ico { color: var(--ok); width: 18px; height: 18px; }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-app="team">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -7,20 +7,22 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
 <title>Maison Hamra Team</title>
-<meta name="theme-color" content="#2a211d">
+<meta name="theme-color" content="#1c1917">
 <link rel="icon" href="../icons/team.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../icons/team-touch.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Lato:wght@400;700&display=swap">
-<link rel="stylesheet" href="../css/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="../css/core.css">
 <link rel="stylesheet" href="../css/team.css">
 </head>
 <body class="team">
-<header class="top">
+<header class="top dark">
   <div class="top-row">
-    <a class="brand" href="./"><img src="../icons/team.svg" alt="" width="40" height="40"><span><b>Maison Hamra</b><small>Team dashboard</small></span></a>
+    <a class="brand" href="./"><img src="../icons/team.svg" alt="" width="42" height="42"><span><b>Maison Hamra</b><small>Team dashboard</small></span></a>
     <div class="tools">
-      <div class="bell-wrap">
+      <div class="bell-wrap" hidden>
         <button id="bell" class="icon-btn" type="button" aria-label="Notifications" aria-haspopup="true" aria-expanded="false" aria-controls="notif-panel"><i data-icon="bell"></i><span id="badge" class="badge" hidden>0</span></button>
         <div id="notif-panel" class="panel" hidden>
           <div class="panel-head"><strong>Team notifications</strong><button id="read-all" type="button" class="link">Mark all read</button></div>
@@ -47,6 +49,7 @@
 
 <main class="wrap team-main">
   <section id="gate" class="card gate">
+    <p class="eyebrow">Maison Hamra</p>
     <h1>Team sign in</h1>
     <p class="muted">This page is for Maison Hamra staff only.</p>
     <button class="btn wide" type="button" id="gate-signin">Sign in</button>
@@ -76,7 +79,7 @@
 
   <section id="tab-customers" class="tab" hidden>
     <h2>Customers</h2>
-    <p class="muted small"><span class="flag orange">Orange</span> = 3 or more no-shows · <span class="flag red">Red</span> = 3 or more unpaid deposits. The numbers show how many times.</p>
+    <p class="lead small"><span class="flag orange">Orange</span> = 3 or more no-shows · <span class="flag red">Red</span> = 3 or more unpaid deposits. The numbers show how many times.</p>
     <input type="search" id="cust-search" placeholder="Search customers" aria-label="Search customers">
     <div class="table-wrap"><table class="t-table" id="cust-table">
       <thead><tr><th>Customer</th><th>Phone</th><th>Reservations</th><th>No-shows</th><th>Unpaid</th></tr></thead><tbody></tbody>
@@ -85,7 +88,7 @@
 
   <section id="tab-noshows" class="tab" hidden>
     <h2>No-show &amp; unpaid list</h2>
-    <p class="muted small">Only the team can see this list.</p>
+    <p class="lead small">Only the team can see this list.</p>
     <ul class="t-list" id="noshow-list"></ul>
   </section>
 
@@ -93,16 +96,17 @@
     <h2>Guest feedback</h2>
     <ul class="t-list" id="fb-list"></ul>
   </section>
+
   <section id="tab-menu" class="tab" hidden>
     <div class="menu-head">
       <h2>Menu editor</h2>
-      <p class="muted small">Changes show on the customer site straight away. Untick “On the menu” to hide a dish without deleting it.</p>
+      <p class="lead small">Changes show on the customer site straight away. Untick “On the menu” to hide a dish without deleting it. Dishes without an uploaded photo use the built-in photo that matches their name.</p>
     </div>
     <div class="chips" id="me-cats" role="tablist" aria-label="Menu categories"></div>
     <div class="cat-edit card" id="me-cat-edit"></div>
     <div class="toolbar">
       <button type="button" class="btn small" id="me-add">+ Add a dish</button>
-      <button type="button" class="btn small ghost-dark" id="me-add-cat">+ New category</button>
+      <button type="button" class="btn small outline" id="me-add-cat">+ New category</button>
       <input type="search" id="me-search" placeholder="Search dishes" aria-label="Search dishes">
     </div>
     <ul class="me-list" id="me-list"></ul>
@@ -110,7 +114,7 @@
 
   <section id="tab-autopilot" class="tab" hidden>
     <h2>Auto-pilot</h2>
-    <p class="muted small">Rules that run by themselves, every time a booking or payment arrives and every 5 minutes. Everything they do is listed below and sent to the team as a notification.</p>
+    <p class="lead small">Rules that run by themselves, every time a booking or payment arrives and every 5 minutes. Everything they do is listed below and sent to the team as a notification.</p>
     <form class="card ap-switches" id="ap-form">
       <label class="switch"><input type="checkbox" id="ap-confirm"><span><b>Accept reservations</b><small>Confirms a booking straight away when a table is free, the deposit (if any) is paid, and the customer is not flagged orange or red. Flagged customers are left for you.</small></span></label>
       <label class="switch"><input type="checkbox" id="ap-deposits"><span><b>Check deposits</b><small>When the bank or payment provider reports a payment, it checks the reservation code, the payer's name and the amount. If all three match, the deposit is marked paid and the booking confirmed. Otherwise it asks you to check.</small></span></label>
@@ -143,7 +147,7 @@
 
   <section id="tab-calls" class="tab" hidden>
     <h2>Phone calls</h2>
-    <p class="muted small">The phone Auto-pilot answers the restaurant's number, books tables after the guest confirms the details, and puts the call through to the team phone when the guest asks for a person. Every call is listed below with what was said.</p>
+    <p class="lead small">The phone Auto-pilot answers the restaurant's number, books tables after the guest confirms the details, and puts the call through to the team phone when the guest asks for a person. Every call is listed below with what was said.</p>
     <form class="card ap-switches" id="ph-form" novalidate>
       <label class="switch"><input type="checkbox" id="ph-enabled"><span><b>Answer calls with the Auto-pilot</b><small>When this is off, every call rings the team phone straight away.</small></span></label>
       <div class="grid3">
@@ -231,7 +235,7 @@
     <div class="dish-edit">
       <div class="photo-box">
         <div class="photo-preview" id="d-preview"></div>
-        <label class="btn small ghost-dark file-btn" for="d-photo">Upload photo</label>
+        <label class="btn small outline file-btn" for="d-photo">Upload photo</label>
         <input id="d-photo" type="file" accept="image/jpeg,image/png,image/webp" class="sr">
         <button type="button" class="link small" id="d-photo-remove">Remove photo</button>
         <p class="small muted">JPG, PNG or WebP, up to 5 MB.</p>
@@ -243,12 +247,20 @@
         <div><label for="d-pic">Picture when there is no photo</label><input id="d-pic" maxlength="8" placeholder="🍽️"></div>
       </div>
     </div>
+    <label for="d-desc">Description <span class="opt">(one or two sentences, shown in the dish details)</span></label>
+    <textarea id="d-desc" rows="2" maxlength="400"></textarea>
     <label for="d-ingr">Ingredients <span class="opt">(separate with commas)</span></label>
     <textarea id="d-ingr" rows="3" maxlength="600"></textarea>
     <fieldset class="checks"><legend>Labels</legend>
       <label><input type="checkbox" id="d-h"> Halal</label>
       <label><input type="checkbox" id="d-v"> Vegetarian</label>
+      <label><input type="checkbox" id="d-m"> Meat</label>
+      <label><input type="checkbox" id="d-c"> Poultry</label>
+      <label><input type="checkbox" id="d-f"> Fish &amp; seafood</label>
+      <label><input type="checkbox" id="d-g"> Gluten</label>
       <label><input type="checkbox" id="d-s"> Spicy</label>
+    </fieldset>
+    <fieldset class="checks"><legend>Availability</legend>
       <label><input type="checkbox" id="d-avail"> On the menu</label>
     </fieldset>
     <div class="row-end">
@@ -266,14 +278,12 @@
     <p id="cancel-what"></p>
     <label for="cancel-reason">Reason for the customer</label>
     <textarea id="cancel-reason" rows="2" maxlength="300"></textarea>
-    <div class="row-end"><button type="button" class="btn ghost-dark" data-close>Keep it</button><button class="btn danger" type="submit">Cancel &amp; notify</button></div>
+    <div class="row-end"><button type="button" class="btn outline" data-close>Keep it</button><button class="btn danger" type="submit">Cancel &amp; notify</button></div>
     <p class="form-msg" id="cancel-msg"></p>
   </form>
 </dialog>
 
 <script src="../js/vendor/supabase.js"></script>
-<script src="../js/config.js"></script>
-<script src="../js/core.js"></script>
-<script src="../js/team.js"></script>
+<script type="module" src="../js/pages/team.js"></script>
 </body>
 </html>

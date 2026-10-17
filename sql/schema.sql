@@ -757,14 +757,23 @@ create table if not exists public.menu_items (
   name text not null check (char_length(name) between 1 and 120),
   price numeric(10,2) not null check (price >= 0),
   picture text not null default '🍽️' check (char_length(picture) <= 16),
-  photo_url text check (photo_url is null or photo_url ~ '^https://'),
+  photo_url text check (photo_url is null or photo_url ~ '^(https://|images/)'),
   ingredients text not null default '' check (char_length(ingredients) <= 600),
-  tags text not null default '' check (tags ~ '^[hvs]*$'),
+  description text not null default '' check (char_length(description) <= 400),
+  -- labels, one letter each (see TAGS in js/menu-data.js): h halal, v vegetarian, m meat, c poultry, f fish & seafood, g gluten, s spicy
+  tags text not null default '' check (tags ~ '^[hvmcfgs]*$'),
   available boolean not null default true,
   sort int not null default 0,
   updated_at timestamptz not null default now()
 );
 create index if not exists menu_items_cat_idx on public.menu_items (category_id, sort);
+-- photos may be https URLs (uploaded from the team app) or paths inside this repository (images/menu/…)
+alter table public.menu_items drop constraint if exists menu_items_photo_url_check;
+alter table public.menu_items add constraint menu_items_photo_url_check check (photo_url is null or photo_url ~ '^(https://|images/)');
+-- dish descriptions and the meat / poultry / fish / gluten labels were added later
+alter table public.menu_items add column if not exists description text not null default '' check (char_length(description) <= 400);
+alter table public.menu_items drop constraint if exists menu_items_tags_check;
+alter table public.menu_items add constraint menu_items_tags_check check (tags ~ '^[hvmcfgs]*$');
 alter table public.menu_categories enable row level security;
 alter table public.menu_items enable row level security;
 drop policy if exists "anyone reads categories" on public.menu_categories;

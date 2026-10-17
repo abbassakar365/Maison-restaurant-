@@ -46,12 +46,12 @@ async function sendEmail(c: Config, to: string, n: Notification, url: string) {
   const key = c.resend ?? Deno.env.get("RESEND_API_KEY");
   if (!key || !to) return "email off";
   const from = c.email_from;
-  const html = `<div style="font-family:Georgia,serif;max-width:520px;margin:auto;color:#2a211d">
-    <h2 style="color:#5a1a24;margin:0 0 6px">Maison Hamra</h2>
-    <h3 style="margin:16px 0 6px">${esc(n.title)}</h3>
-    <p style="font-family:Arial,sans-serif;line-height:1.5">${esc(n.body)}</p>
-    <p><a href="${url}" style="display:inline-block;background:#5a1a24;color:#fff;padding:10px 18px;border-radius:999px;text-decoration:none;font-family:Arial,sans-serif">Open the app</a></p>
-    <p style="font-family:Arial,sans-serif;font-size:12px;color:#6e6158">Hamra Street, Beirut · +961 00 000 000</p></div>`;
+  const html = `<div style="font-family:Georgia,'Times New Roman',serif;max-width:520px;margin:auto;padding:28px 24px;color:#1c1917;background:#faf7f2;border:1px solid #e3dacb">
+    <p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#b3935a">Maison Hamra</p>
+    <h2 style="margin:0 0 18px;font-weight:normal;font-size:26px">${esc(n.title)}</h2>
+    <p style="font-family:Arial,sans-serif;line-height:1.6;color:#2d2722">${esc(n.body)}</p>
+    <p style="margin:22px 0"><a href="${url}" style="display:inline-block;background:#1c1917;color:#fff;padding:12px 22px;border-radius:4px;text-decoration:none;font-family:Arial,sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase">Open the app</a></p>
+    <p style="font-family:Arial,sans-serif;font-size:12px;color:#776a5e;border-top:1px solid #e3dacb;padding-top:12px">Hamra Street, Beirut · +961 00 000 000</p></div>`;
   const r = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },

@@ -1,5 +1,5 @@
 /* ===== Maison Hamra — settings: edit this file only ===== */
-const CONFIG = {
+export const CONFIG = {
   // Supabase > Project Settings > API keys (publishable key — never the secret / service_role key)
   supabaseUrl: 'https://efwqkllaultepxprwert.supabase.co',
   supabaseKey: 'sb_publishable_RIp8fWM5JrW3UfxPJtCMKQ_KOz2WSVa',

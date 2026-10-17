@@ -2,13 +2,54 @@
 
 Website and app for a French brasserie in Hamra, Beirut. Guests can browse the menu, read and post reviews, reserve a table and pay deposits. The team gets a dashboard to manage everything.
 
-It is a static site (HTML, CSS and plain JavaScript, with no build step), backed by a Supabase project for accounts, data, live notifications and scheduled jobs.
+It is a static site (HTML, CSS and plain JavaScript ES modules, with no build step), backed by a Supabase project for accounts, data, live notifications and scheduled jobs.
 
 | Page | What it does |
 |---|---|
-| `index.html` | The customer app: header with section buttons and a notification bell, the menu (8 categories, 12–13 items each, ingredients shown on hover or tap), reviews (Enter posts), the reservation form, the About section and the contact footer |
+| `index.html` | The customer site: full-bleed hero, hours/address/phone strip, the menu (8 categories, 100 dishes and drinks with photos; each one opens a details dialog with its description, ingredients and dietary labels), the reservation form, reviews (Enter posts), the About section and the footer |
 | `pay.html` | Deposit payment by card link, bank transfer or Whish. `pay.html#bank` is the public bank-payment link |
-| `team/` | **The separate team app.** It has its own address (`…/Maison-restaurant-/team/`), its own home-screen icon and its own sign-in. Nothing on the customer site links to it. It shows reservations, notifications (cancelled ones are marked on the right with who cancelled), customers (orange or red flags with counts), the no-show list, feedback, and the phone call log |
+| `privacy.html`, `terms.html` | Legal pages (templates, see below) |
+| `team/` | **The separate team app.** It has its own address (`…/Maison-restaurant-/team/`), its own home-screen icon and its own sign-in. Nothing on the customer site links to it. It shows reservations, notifications, customers (orange or red flags with counts), the no-show list, feedback, the menu editor, the Auto-pilot, the phone call log and the settings |
+
+## How the code is organised
+
+```
+css/core.css        design tokens (colours, type, spacing), reset, buttons, forms and the components every page shares
+css/site.css        the customer site: hero, info strip, menu grid, reservation, reviews, about, footer
+css/pay.css         deposit page
+css/legal.css       privacy and terms pages
+css/team.css        team dashboard
+js/config.js        the only file to edit for contact details, bank details and keys (exports CONFIG)
+js/menu-data.js     built-in copy of the menu with the photo slug of every dish (fallback + photo matching)
+js/lib/             shared modules: dom (query + safe element builder + icons), format (dates in Beirut time, money),
+                    supabase (client, APP, ROOT, assetUrl), notify (toasts, chime), push (service worker + Web Push),
+                    install (install-the-app buttons), auth (sign-in dialog), bell (notification bell), shell (common boot)
+js/pages/           one entry module per page: home.js, pay.js, team.js (loaded with <script type="module">)
+js/vendor/          the Supabase browser bundle (classic script, exposes window.supabase)
+images/menu/        one 800×600 WebP photo per dish, named by the slug in js/menu-data.js
+images/site/        hero, About-section photos and the Open Graph image
+icons/              app icons, badge and QR codes
+sql/                database: schema.sql, menu_seed.sql, menu_sync.sql, phone_autopilot.sql, finish_setup.sql
+scripts/            menu-sql.mjs regenerates the two menu SQL files from js/menu-data.js
+supabase/functions/ Edge Functions: push, payment-webhook, voice
+```
+
+The design is a warm ivory-and-ink palette with champagne-gold accents and the brand's bordeaux kept for the logo, prices and links. Headings use Cormorant Garamond, text uses Jost (both from Google Fonts). All colours and spacing are CSS custom properties at the top of `css/core.css`; change them there and every page follows.
+
+### Dish photos
+
+Every dish and drink has a photo in `images/menu/`, generated to a single editorial style (white porcelain on a dark walnut table, window light). Photos are matched to dishes in two ways:
+
+1. A dish row in the database can carry a `photo_url`: either a full `https://` URL (a photo uploaded from the team app) or a repository path such as `images/menu/steak-frites.webp`.
+2. When a row has no `photo_url`, the site looks the dish name up (case-insensitive) in `js/menu-data.js` and uses the matching built-in photo. Renaming a dish in the team app therefore drops its built-in photo unless you upload one or set the path.
+
+To replace a photo, overwrite the WebP file (800×600 keeps the grid even) or upload a new one from the team app. To add a dish with a built-in photo, add the WebP to `images/menu/` and the slug to `js/menu-data.js`.
+
+### Dish labels and descriptions
+
+Every dish carries one-letter labels in `tags`: **h** halal, **v** vegetarian, **m** meat (beef, veal, lamb), **c** poultry, **f** fish & seafood, **g** contains gluten, **s** spicy. The menu shows them as icons on the cards and as icon + name in the legend and in the dish dialog; the team app edits them as checkboxes. The list lives in `TAGS` in `js/menu-data.js` (label, colour class, icon) and the database only accepts those letters. Each dish also has a one- or two-sentence `description` shown in the dialog; database rows without one fall back to the built-in text, matched by name.
+
+After editing dishes in `js/menu-data.js`, run `node scripts/menu-sql.mjs` to regenerate `sql/menu_seed.sql` and `sql/menu_sync.sql`.
 
 ## How a reservation flows
 
@@ -71,9 +112,9 @@ The Resend key is a send-only key stored in Supabase Vault as `resend_api_key`. 
    select id from auth.users where email = 'team.member@example.com';
    ```
    They then sign in at the team app address (`/team/`).
-5. **Edit `js/config.js`:** set the phone, WhatsApp, Instagram link (the icon stays unlinked until you set it), address, bank details, Whish number and a hosted card checkout link (`cardLink`, for example a Stripe Payment Link). The card button stays hidden until `cardLink` is set.
-6. **Menu, set menus and rules are edited in the team app.** The **Menu** tab adds, edits, hides and deletes dishes and categories, with photo upload. The **Settings** tab changes the number of tables, seats per table, table time, reservation hours and the deposit rule, and edits set menus. Changes appear on the site straight away. `js/menu.js` is only a built-in copy, shown if the database can't be reached.
-7. **Photos:** in the team app, open **Menu**, choose a dish, then **Edit → Upload photo**. Use JPG, PNG or WebP files up to 5 MB.
+5. **Edit `js/config.js`:** set the phone, WhatsApp, Instagram link (the icon stays unlinked until you set it), address, opening hours text, bank details, Whish number and a hosted card checkout link (`cardLink`, for example a Stripe Payment Link). The card button stays hidden until `cardLink` is set.
+6. **Menu, set menus and rules are edited in the team app.** The **Menu** tab adds, edits, hides and deletes dishes and categories, with photo upload. The **Settings** tab changes the number of tables, seats per table, table time, reservation hours and the deposit rule, and edits set menus. Changes appear on the site straight away. `js/menu-data.js` is only a built-in copy, shown if the database can't be reached, and the place where dish photos are matched by name.
+7. **Photos:** every dish already has a photo in `images/menu/` (see *Dish photos* above). To use your own, open **Menu** in the team app, choose a dish, then **Edit → Upload photo** (JPG, PNG or WebP up to 5 MB). On a database that was seeded before the photos, labels and descriptions existed, run `sql/schema.sql` and then `sql/menu_sync.sql` once so the rows pick them up.
 8. **About section:** the menu is now 100% **pork-free and alcohol-free**, and the About section says so. Fill in the food-safety certificate number and expiry date in `index.html`.
 
 ## Privacy policy and terms
@@ -138,8 +179,19 @@ The function refuses any request that doesn't carry the URL secret or a valid si
 
 The database runs in the **Maison-restaurant-** Supabase project (`efwqkllaultepxprwert`). To build it from scratch, run these files in order in the SQL editor; each is safe to re-run:
 
-1. `sql/schema.sql`: tables, policies, all functions (including the Auto-pilot), the `pg_cron` jobs and the Web Push trigger.
-2. `sql/menu_seed.sql`: the first menu, copied from `js/menu.js` (skipped when the menu already has dishes).
-3. `sql/phone_autopilot.sql`: the phone Auto-pilot's tables and functions. `sql/phone_setup_run.sql` is the same script with a prerequisite check and a test call record.
+1. `sql/schema.sql`: tables, policies, all functions (including the Auto-pilot), the `pg_cron` jobs and the Web Push trigger. On an existing database it also widens the `menu_items.photo_url` rule (repository paths as well as `https://` URLs), adds the `description` column and allows the newer labels in `tags`.
+2. `sql/menu_seed.sql`: the first menu, generated from `js/menu-data.js` with the photo, labels and description of every dish (skipped when the menu already has dishes).
+3. `sql/menu_sync.sql`: for a database seeded earlier, matches dishes by name and fills in missing photos and descriptions and replaces the labels with the built-in ones. Dishes the team added are not touched; run it once after updating the site.
+4. `sql/phone_autopilot.sql`: the phone Auto-pilot's tables and functions. `sql/phone_setup_run.sql` is the same script with a prerequisite check and a test call record.
 
 The Edge Functions are in `supabase/functions/` (`push`, `payment-webhook`, `voice`), deployed with JWT verification off because each one checks its own signature or secret.
+
+## Working on the site locally
+
+There is no build step. Serve the folder with any static server, for example:
+
+```sh
+python3 -m http.server 8787
+```
+
+then open `http://127.0.0.1:8787/`. The pages talk to the live Supabase project, so the menu, settings and reviews are real; sign-in links in emails point at the GitHub Pages address, so test accounts are easiest to use on the deployed site.
