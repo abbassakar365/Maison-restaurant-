@@ -1,9 +1,9 @@
 {
-  "id": "./",
+  "id": "/Maison-restaurant-/admin/",
   "name": "Maison Hamra Admin",
   "short_name": "MH Admin",
   "description": "Admin dashboard for Maison Hamra reservations.",
-  "start_url": "./",
+  "start_url": "./?source=admin-app",
   "scope": "./",
   "display": "standalone",
   "background_color": "#faf7f2",

@@ -3,7 +3,7 @@
    show the steps instead. */
 import { $, $$ } from './dom.js';
 import { toast } from './notify.js';
-import { isIOS, isInstalled } from './push.js';
+import { isIOS, isInstalled, inCustomerAppWindow } from './push.js';
 
 let installEvent = null;
 
@@ -15,6 +15,7 @@ window.addEventListener('appinstalled', () => {
 });
 
 function installSteps() {
+  if (inCustomerAppWindow()) return 'This window is the Maison Hamra guest app. Open this admin page in Chrome or Edge (not from the guest app) and press the button again to install MH Admin as its own app.';
   const ua = navigator.userAgent;
   if (isIOS) return 'On iPhone or iPad: open this page in Safari, tap the Share button (the square with an arrow), then “Add to Home Screen”.';
   if (/Macintosh/.test(ua) && /Safari/.test(ua) && !/Chrome|Chromium|Edg/.test(ua)) return 'On Mac with Safari: choose File → “Add to Dock”.';

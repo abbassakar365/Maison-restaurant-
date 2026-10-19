@@ -7,7 +7,27 @@ import { sb, APP, ROOT } from './supabase.js';
 import { toast, chime } from './notify.js';
 
 export const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-export const isInstalled = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const standalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+
+// The customer app's scope (the site root) also covers admin/, so on Android and computers a
+// standalone window on the admin page can belong to the customer app. MH Admin opens with
+// ?source=admin-app (its manifest start_url and its notification taps); remember that for this
+// window and tidy the address. iPhone home-screen apps can't be sent to admin/ by a link.
+const ADMIN_APP_KEY = 'mh-admin-app';
+if (APP === 'team') {
+  const url = new URL(location.href);
+  if (url.searchParams.get('source') === 'admin-app') {
+    try { sessionStorage.setItem(ADMIN_APP_KEY, '1'); } catch { /* storage blocked */ }
+    url.searchParams.delete('source');
+    history.replaceState(history.state, '', url.pathname + url.search + url.hash);
+  }
+}
+const launchedAsAdmin = () => { try { return sessionStorage.getItem(ADMIN_APP_KEY) === '1'; } catch { return true; } };
+
+/** True when the admin page is showing inside the customer app's window rather than MH Admin. */
+export const inCustomerAppWindow = () => APP === 'team' && !isIOS && standalone() && !launchedAsAdmin();
+/** True when this page runs as its own installed app (the customer app, or MH Admin on the admin page). */
+export const isInstalled = () => standalone() && !inCustomerAppWindow();
 export const alertsAllowed = () => 'Notification' in window && Notification.permission === 'granted';
 
 let registration = null;
