@@ -1,10 +1,10 @@
-/* Maison Hamra service worker — shared by the customer app (scope ./) and the
-   admin app (admin/sw.js imports this file, scope ./admin/).
+/* Maison Hamra service worker — the customer app's (scope ./). The admin app has its
+   own worker, admin/sw.js, scoped to ./admin/.
    Shows Web Push alerts even when the app is closed, and opens the right page on tap. */
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
 
-const ROOT = self.registration.scope.replace(/admin\/$/, '');
+const ROOT = self.registration.scope;
 const ICON = ROOT + 'icons/icon-192.png';   // large colour picture in the alert
 const BADGE = ROOT + 'icons/badge-96.png';  // small one-colour symbol in the phone's status bar
 
@@ -27,7 +27,7 @@ self.addEventListener('notificationclick', e => {
   const url = (e.notification.data && e.notification.data.url) || self.registration.scope;
   e.waitUntil((async () => {
     const wins = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
-    const open = wins.find(w => w.url.startsWith(self.registration.scope));
+    const open = wins.find(w => w.url.startsWith(ROOT) && !w.url.startsWith(ROOT + 'admin/'));
     if (open) { await open.focus(); return open.navigate ? open.navigate(url) : null; }
     return self.clients.openWindow(url);
   })());
