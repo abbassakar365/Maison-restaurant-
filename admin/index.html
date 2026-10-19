@@ -11,6 +11,10 @@
 <link rel="icon" href="../icons/admin.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../icons/admin-touch.png">
 <link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MH Admin">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500&display=swap">
@@ -54,6 +58,10 @@
     <p class="muted">This page is for Maison Hamra staff only.</p>
     <button class="btn wide" type="button" id="gate-signin">Sign in</button>
     <p class="form-msg err" id="gate-msg"></p>
+    <div class="install-card gate-install">
+      <button type="button" class="btn outline wide install-btn" data-install><i data-icon="download"></i><span>Install the admin app</span></button>
+      <p class="small install-help" hidden></p>
+    </div>
   </section>
 
   <section id="tab-reservations" class="tab" hidden>
@@ -225,6 +233,10 @@
     <button type="button" class="link right" id="a-forgot">Forgot password?</button>
     <button class="btn wide" id="auth-go" type="submit">Sign in</button>
     <p class="form-msg" id="auth-msg" role="status"></p>
+    <div class="install-card gate-install dlg-install">
+      <button type="button" class="btn outline wide install-btn" data-install><i data-icon="download"></i><span>Install the admin app</span></button>
+      <p class="small install-help" hidden></p>
+    </div>
   </form>
 </dialog>
 
