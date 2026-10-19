@@ -32,3 +32,15 @@ self.addEventListener('notificationclick', e => {
     return self.clients.openWindow(url);
   })());
 });
+
+// Page loads go to the network as usual; when the phone is offline, show a short notice
+// instead of the browser's error page. Having this handler also lets every browser offer
+// "Install app" (Samsung Internet and older Chrome require one).
+const OFFLINE = '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
+  + '<title>Offline · Maison Hamra</title><body style="font-family:Georgia,serif;background:#faf7f2;color:#1c1917;'
+  + 'display:grid;place-items:center;min-height:100vh;margin:0;padding:24px;text-align:center">'
+  + '<div><h1 style="font-weight:normal">You are offline</h1><p>Check your connection, then pull to refresh.</p></div>';
+self.addEventListener('fetch', e => {
+  if (e.request.mode !== 'navigate') return;
+  e.respondWith(fetch(e.request).catch(() => new Response(OFFLINE, { headers: { 'Content-Type': 'text/html; charset=utf-8' } })));
+});

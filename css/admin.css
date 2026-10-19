@@ -168,3 +168,9 @@ label.inline input { width: auto; min-height: 0; }
 .transcript .t-system { justify-self: center; max-width: 100%; background: none; color: var(--muted); font-size: 0.8rem; font-style: italic; text-align: center; }
 .transcript b { display: block; font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; }
 @media (max-width: 560px) { .call > summary { grid-template-columns: 1fr auto; } .call-sum { grid-column: 1 / 3; } .call > summary time { grid-column: 1 / 3; } }
+
+/* install button under the sign-in button, before anyone signs in */
+.gate-install { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; margin-top: 14px; }
+.gate-install .install-btn { justify-self: stretch; }
+.gate-install .install-help { grid-column: 1; text-align: left; }
+.dlg-install { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
