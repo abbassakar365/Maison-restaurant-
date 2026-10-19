@@ -1,5 +1,5 @@
 /* ===== Built-in copy of the menu =====
-   The live menu is edited by the team in the team app (Menu tab) and stored in the database.
+   The live menu is edited by the team in the admin app (Menu tab) and stored in the database.
    This copy is shown if the database cannot be reached, and it is also where the dish photos
    in images/menu/ are matched to dishes by name when a database row has no photo of its own.
 
@@ -230,7 +230,7 @@ export const MENU = [
   ]}
 ];
 
-/* Dietary labels, in display order: label (legend, dialog, team app), CSS class and icon name (js/lib/dom.js).
+/* Dietary labels, in display order: label (legend, dialog, admin app), CSS class and icon name (js/lib/dom.js).
    The database only accepts these letters in menu_items.tags (see sql/schema.sql). */
 export const TAGS = {
   h: { label: 'Halal', cls: 'tag-h', icon: 'halal' },

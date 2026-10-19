@@ -9,7 +9,7 @@ It is a static site (HTML, CSS and plain JavaScript ES modules, with no build st
 | `index.html` | The customer site: full-bleed hero, hours/address/phone strip, the menu (8 categories, 100 dishes and drinks with photos; each one opens a details dialog with its description, ingredients and dietary labels), the reservation form, reviews (Enter posts), the About section and the footer |
 | `pay.html` | Deposit payment by card link, bank transfer or Whish. `pay.html#bank` is the public bank-payment link |
 | `privacy.html`, `terms.html` | Legal pages (templates, see below) |
-| `team/` | **The separate team app.** It has its own address (`…/Maison-restaurant-/team/`), its own home-screen icon and its own sign-in. Nothing on the customer site links to it. It shows reservations, notifications, customers (orange or red flags with counts), the no-show list, feedback, the menu editor, the Auto-pilot, the phone call log and the settings |
+| `admin/` | **The separate admin app.** It has its own address (`…/Maison-restaurant-/admin/`), its own home-screen icon and its own sign-in. Nothing on the customer site links to it. It shows reservations, notifications, customers (orange or red flags with counts), the no-show list, feedback, the menu editor, the Auto-pilot, the phone call log and the settings |
 
 ## How the code is organised
 
@@ -18,7 +18,7 @@ css/core.css        design tokens (colours, type, spacing), reset, buttons, form
 css/site.css        the customer site: hero, info strip, menu grid, reservation, reviews, about, footer
 css/pay.css         deposit page
 css/legal.css       privacy and terms pages
-css/team.css        team dashboard
+css/admin.css        admin dashboard
 js/config.js        the only file to edit for contact details, bank details and keys (exports CONFIG)
 js/menu-data.js     built-in copy of the menu with the photo slug of every dish (fallback + photo matching)
 js/lib/             shared modules: dom (query + safe element builder + icons), format (dates in Beirut time, money),
@@ -40,14 +40,14 @@ The design is a warm ivory-and-ink palette with champagne-gold accents and the b
 
 Every dish and drink has a photo in `images/menu/`, generated to a single editorial style (white porcelain on a dark walnut table, window light). Photos are matched to dishes in two ways:
 
-1. A dish row in the database can carry a `photo_url`: either a full `https://` URL (a photo uploaded from the team app) or a repository path such as `images/menu/steak-frites.webp`.
-2. When a row has no `photo_url`, the site looks the dish name up (case-insensitive) in `js/menu-data.js` and uses the matching built-in photo. Renaming a dish in the team app therefore drops its built-in photo unless you upload one or set the path.
+1. A dish row in the database can carry a `photo_url`: either a full `https://` URL (a photo uploaded from the admin app) or a repository path such as `images/menu/steak-frites.webp`.
+2. When a row has no `photo_url`, the site looks the dish name up (case-insensitive) in `js/menu-data.js` and uses the matching built-in photo. Renaming a dish in the admin app therefore drops its built-in photo unless you upload one or set the path.
 
-To replace a photo, overwrite the WebP file (800×600 keeps the grid even) or upload a new one from the team app. To add a dish with a built-in photo, add the WebP to `images/menu/` and the slug to `js/menu-data.js`.
+To replace a photo, overwrite the WebP file (800×600 keeps the grid even) or upload a new one from the admin app. To add a dish with a built-in photo, add the WebP to `images/menu/` and the slug to `js/menu-data.js`.
 
 ### Dish labels and descriptions
 
-Every dish carries one-letter labels in `tags`: **h** halal, **v** vegetarian, **m** meat (beef, veal, lamb), **c** poultry, **f** fish & seafood, **g** contains gluten, **s** spicy. The menu shows them as icons on the cards and as icon + name in the legend and in the dish dialog; the team app edits them as checkboxes. The list lives in `TAGS` in `js/menu-data.js` (label, colour class, icon) and the database only accepts those letters. Each dish also has a one- or two-sentence `description` shown in the dialog; database rows without one fall back to the built-in text, matched by name.
+Every dish carries one-letter labels in `tags`: **h** halal, **v** vegetarian, **m** meat (beef, veal, lamb), **c** poultry, **f** fish & seafood, **g** contains gluten, **s** spicy. The menu shows them as icons on the cards and as icon + name in the legend and in the dish dialog; the admin app edits them as checkboxes. The list lives in `TAGS` in `js/menu-data.js` (label, colour class, icon) and the database only accepts those letters. Each dish also has a one- or two-sentence `description` shown in the dialog; database rows without one fall back to the built-in text, matched by name.
 
 After editing dishes in `js/menu-data.js`, run `node scripts/menu-sql.mjs` to regenerate `sql/menu_seed.sql` and `sql/menu_sync.sql`.
 
@@ -63,12 +63,12 @@ After editing dishes in `js/menu-data.js`, run `node scripts/menu-sql.mjs` to re
    - **No-show:** the customer gets an automatic notification, and their no-show count goes up.
 7. Customers with **3+ no-shows show in orange** and those with **3+ unpaid deposits show in red**. Both counts appear beside their names.
 
-## The team app (`team/`)
+## The admin app (`admin/`)
 
-- **Separate from the customer site.** The customer site has no link to it. Staff open `https://abbassakar365.github.io/Maison-restaurant-/team/`, sign in, and press **Install the team app** in the Settings tab to add **MH Team** to their phone or computer.
+- **Separate from the customer site.** The customer site has no link to it. Staff open `https://abbassakar365.github.io/Maison-restaurant-/admin/`, sign in, and press **Install the admin app** in the Settings tab to add **MH Admin** to their phone or computer.
 - **Unreachable by customers.** Only accounts in the `staff` table get past the sign-in screen, and the database itself refuses team data and team actions to anyone else. A customer who finds the address only sees "not on the team list". The page also tells search engines not to index it.
-- **Separate sign-in.** Being signed in on the customer site doesn't sign you in to the team app on the same phone, and the reverse is also true.
-- **Linked to the customer site.** Both apps share the same database, so every reservation, cancellation and payment shows up live on both. The team app has a **Customer site** button.
+- **Separate sign-in.** Being signed in on the customer site doesn't sign you in to the admin app on the same phone, and the reverse is also true.
+- **Linked to the customer site.** Both apps share the same database, so every reservation, cancellation and payment shows up live on both. The admin app has a **Customer site** button.
 
 ## Notifications
 
@@ -76,7 +76,7 @@ The bell (top right) shows a red unread count. New notifications arrive live, pl
 
 **Phone alerts when the app is closed (Web Push)** are set up:
 
-1. A customer, or a team member in the team app, taps **Turn on phone alerts & sound** and allows notifications. The phone is then registered in `push_subscriptions`.
+1. A customer, or a team member in the admin app, taps **Turn on phone alerts & sound** and allows notifications. The phone is then registered in `push_subscriptions`.
 2. Every new notification row triggers `notifications_push`, which calls the `push` Edge Function (`supabase/functions/push`).
 3. The function sends the alert to that customer's phones, or to every team member's phone for team notifications. Tapping the alert opens the right page: the reservation, the deposit payment or the feedback form.
 
@@ -103,7 +103,7 @@ The Resend key is a send-only key stored in Supabase Vault as `resend_api_key`. 
 
 ## Setup checklist
 
-1. **GitHub Pages:** go to Settings → Pages → Deploy from branch → `main` / root. The app will be live at `https://abbassakar365.github.io/Maison-restaurant-/`. Guests install it with the **Install the app** button in the About section. That button opens the install window in Chrome and Edge, and shows the Add to Home Screen steps on iPhone and Safari. Printable QR codes are still in `icons/qr.png` and `icons/team-qr.png`.
+1. **GitHub Pages:** go to Settings → Pages → Deploy from branch → `main` / root. The app will be live at `https://abbassakar365.github.io/Maison-restaurant-/`. Guests install it with the **Install the app** button in the About section. That button opens the install window in Chrome and Edge, and shows the Add to Home Screen steps on iPhone and Safari. Printable QR codes are still in `icons/qr.png` and `icons/admin-qr.png`.
 2. **Supabase auth URLs:** go to Authentication → URL Configuration. Set **Site URL** to the Pages address above and add it under **Redirect URLs**. Otherwise confirmation and password-reset emails link to `localhost`.
 3. **Email:** Supabase's built-in email sender is rate-limited to a handful of emails per hour. Before launch, add your own SMTP under Authentication → Emails. Alternatively, turn off "Confirm email" if you don't need verified addresses.
 4. **Add team members:** each person creates an account on the customer site, then you run this in the Supabase SQL editor:
@@ -111,10 +111,10 @@ The Resend key is a send-only key stored in Supabase Vault as `resend_api_key`. 
    insert into public.staff (user_id)
    select id from auth.users where email = 'team.member@example.com';
    ```
-   They then sign in at the team app address (`/team/`).
+   They then sign in at the admin app address (`/admin/`).
 5. **Edit `js/config.js`:** set the phone, WhatsApp, Instagram link (the icon stays unlinked until you set it), address, opening hours text, bank details, Whish number and a hosted card checkout link (`cardLink`, for example a Stripe Payment Link). The card button stays hidden until `cardLink` is set.
-6. **Menu, set menus and rules are edited in the team app.** The **Menu** tab adds, edits, hides and deletes dishes and categories, with photo upload. The **Settings** tab changes the number of tables, seats per table, table time, reservation hours and the deposit rule, and edits set menus. Changes appear on the site straight away. `js/menu-data.js` is only a built-in copy, shown if the database can't be reached, and the place where dish photos are matched by name.
-7. **Photos:** every dish already has a photo in `images/menu/` (see *Dish photos* above). To use your own, open **Menu** in the team app, choose a dish, then **Edit → Upload photo** (JPG, PNG or WebP up to 5 MB). On a database that was seeded before the photos, labels and descriptions existed, run `sql/schema.sql` and then `sql/menu_sync.sql` once so the rows pick them up.
+6. **Menu, set menus and rules are edited in the admin app.** The **Menu** tab adds, edits, hides and deletes dishes and categories, with photo upload. The **Settings** tab changes the number of tables, seats per table, table time, reservation hours and the deposit rule, and edits set menus. Changes appear on the site straight away. `js/menu-data.js` is only a built-in copy, shown if the database can't be reached, and the place where dish photos are matched by name.
+7. **Photos:** every dish already has a photo in `images/menu/` (see *Dish photos* above). To use your own, open **Menu** in the admin app, choose a dish, then **Edit → Upload photo** (JPG, PNG or WebP up to 5 MB). On a database that was seeded before the photos, labels and descriptions existed, run `sql/schema.sql` and then `sql/menu_sync.sql` once so the rows pick them up.
 8. **About section:** the menu is now 100% **pork-free and alcohol-free**, and the About section says so. Fill in the food-safety certificate number and expiry date in `index.html`.
 
 ## Privacy policy and terms
@@ -125,7 +125,7 @@ The Resend key is a send-only key stored in Supabase Vault as `resend_api_key`. 
 
 ## Auto-pilot and automatic deposit checks
 
-The team app's **Auto-pilot** tab has three switches. All three are on by default.
+The admin app's **Auto-pilot** tab has three switches. All three are on by default.
 
 - **Accept reservations:** confirms a booking straight away when it fits in the tables, its deposit (if any) is paid, and the customer isn't flagged (3+ no-shows or 3+ unpaid deposits). Flagged customers are left for the team.
 - **Check deposits:** when the bank or payment provider reports a payment, it checks the reservation code in the reference, the payer's name and the amount. It also refuses a transaction it has already seen. If everything matches, the deposit is marked paid and the booking confirmed. Otherwise the team gets a "Payment needs checking" notification and the deadline is paused.
@@ -148,7 +148,7 @@ The phone Auto-pilot answers the restaurant's phone number with a voice. It talk
 - **Check a reservation,** by the caller's number or by the code.
 - **Put the call through to the team** when the guest asks for a person, or for anything it can't handle (changing or cancelling, groups over 30, events, complaints). The team phone rings, and the person who answers first hears why the guest is calling. If nobody answers, the Auto-pilot comes back on the line, offers to take a message, and the team gets a "Missed call transfer, call back …" notification.
 
-The team app's **Calls** tab lists every call with its full transcript (live calls update as they happen) and has the settings: the on/off switch, the **team phone for transfers** and the greeting language. When the switch is off, calls go straight to the team phone.
+The admin app's **Calls** tab lists every call with its full transcript (live calls update as they happen) and has the settings: the on/off switch, the **team phone for transfers** and the greeting language. When the switch is off, calls go straight to the team phone.
 
 **How it works:** SignalWire receives the call and sends what the guest says to the `voice` Edge Function (`supabase/functions/voice`). The function asks Claude (Anthropic's AI model) what to answer, runs the booking tools against the database, and replies with what the phone should say, in cXML (the same call language Twilio uses, so a Twilio number works too). The database side is in `sql/phone_autopilot.sql`.
 
@@ -163,7 +163,7 @@ The team app's **Calls** tab lists every call with its full transcript (live cal
    select vault.create_secret('<Anthropic API key>', 'anthropic_api_key');
    ```
    The phone URL's secret is already in Vault as `phone_url_key` (made by the setup). If your provider shows a request-signing key, you can store it too: `phone_signing_key` (SignalWire Signing Key) or `twilio_auth_token` (Twilio).
-4. In the team app → **Calls**, enter the **team phone for transfers** (for example `+961 3 123 456`) and save.
+4. In the admin app → **Calls**, enter the **team phone for transfers** (for example `+961 3 123 456`) and save.
 5. Call the number to test. The call shows in the Calls tab as it happens.
 
 The function refuses any request that doesn't carry the URL secret or a valid signature from your provider. It uses the `claude-opus-5-5` model at low effort to keep answers quick; the model is set in `supabase/functions/voice/agent.ts` (`MODEL`). Each call costs the phone provider's per-minute price plus a few cents of Claude usage. Tests: `deno test supabase/functions/voice/agent.test.ts`.

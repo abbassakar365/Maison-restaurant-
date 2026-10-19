@@ -17,7 +17,7 @@ export const CONFIG = {
   siteUrl: 'https://abbassakar365.github.io/Maison-restaurant-/',
 
   // Deposit payments. The deposit rule (25% over $300), opening hours and the 25 tables
-  // are set by the team in the team app → Settings, not here.
+  // are set by the team in the admin app → Settings, not here.
   payments: {
     cardLink: '',                           // a hosted card checkout (Stripe / Areeba / your bank's payment link). Button hides while empty.
     bank: {

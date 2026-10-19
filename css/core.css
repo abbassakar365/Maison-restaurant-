@@ -3,7 +3,7 @@
    Shared by every page: design tokens, reset, typography, layout helpers,
    buttons, forms and the common components (header, notification panel,
    toasts, dialogs, cards, pills). Page-specific rules live in site.css,
-   pay.css, legal.css and team.css.
+   pay.css, legal.css and admin.css.
    ========================================================================== */
 
 /* ---------- 1. Design tokens ---------- */
@@ -277,7 +277,7 @@ fieldset { border: 0; padding: 0; min-width: 0; }
   .tools { order: 3; margin-left: 0; }
 }
 
-/* dark header variant (team app, pay page) */
+/* dark header variant (admin app, pay page) */
 .top.dark { background: rgba(28, 25, 23, 0.94); border-bottom-color: rgba(255, 255, 255, 0.08); color: var(--white); }
 .top.dark .brand { color: var(--white); }
 .top.dark .brand small { color: var(--gold-2); }

@@ -1,4 +1,4 @@
-/* Team dashboard: reservations, notifications, customers, no-show list, feedback,
+/* Admin dashboard: reservations, notifications, customers, no-show list, feedback,
    menu editor, settings, Auto-pilot and phone calls. */
 import { $, $$, h, setMessage } from '../lib/dom.js';
 import { sb, assetUrl } from '../lib/supabase.js';

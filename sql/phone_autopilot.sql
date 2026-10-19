@@ -1,5 +1,5 @@
 -- =====================================================================
--- Phone Auto-pilot (team app → Calls)
+-- Phone Auto-pilot (admin app → Calls)
 -- Applied as migration mh_12_phone_autopilot. Safe to re-run.
 --
 -- A SignalWire (or Twilio) phone number sends every incoming call to the `voice` Edge Function
