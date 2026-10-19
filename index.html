@@ -6,15 +6,23 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://efwqkllaultepxprwert.supabase.co; connect-src 'self' https://efwqkllaultepxprwert.supabase.co wss://efwqkllaultepxprwert.supabase.co; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>Maison Hamra — Brasserie française, Beirut</title>
-<meta name="description" content="French brasserie in Hamra, Beirut. Browse the menu, read reviews and reserve your table.">
-<meta name="theme-color" content="#5a1a24">
+<meta name="description" content="A Parisian brasserie in the heart of Hamra, Beirut. Halal, alcohol-free French classics, house pastries and a warm welcome. Browse the menu and reserve your table.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Maison Hamra — Brasserie française, Beirut">
+<meta property="og:description" content="French brasserie classics in Hamra, Beirut. Browse the menu, read reviews and reserve your table.">
+<meta property="og:image" content="https://abbassakar365.github.io/Maison-restaurant-/images/site/og.jpg">
+<meta property="og:url" content="https://abbassakar365.github.io/Maison-restaurant-/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#faf7f2">
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Lato:wght@400;700&display=swap">
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/site.css">
+<link rel="preload" as="image" href="images/site/hero.webp" fetchpriority="high">
 </head>
 <body>
 <a class="skip" href="#menu">Skip to the menu</a>
@@ -22,11 +30,11 @@
 <header class="top" id="top">
   <div class="top-row">
     <a class="brand" href="#hero" aria-label="Maison Hamra — home">
-      <img src="icons/icon.svg" alt="" width="40" height="40">
+      <img src="icons/icon.svg" alt="" width="42" height="42">
       <span><b>Maison Hamra</b><small>Brasserie française · Beirut</small></span>
     </a>
     <div class="tools">
-      <div class="bell-wrap">
+      <div class="bell-wrap" hidden>
         <button id="bell" class="icon-btn" type="button" aria-label="Notifications" aria-haspopup="true" aria-expanded="false" aria-controls="notif-panel">
           <i data-icon="bell"></i><span id="badge" class="badge" hidden>0</span>
         </button>
@@ -42,51 +50,57 @@
   <nav class="nav" aria-label="Sections">
     <a href="#menu" data-sec="menu">Menu</a>
     <a href="#reserve" data-sec="reserve">Reserve</a>
-    <a href="#about" data-sec="about">About</a>
-    <a href="#contact" data-sec="contact">Contact us</a>
     <a href="#reviews" data-sec="reviews">Reviews</a>
+    <a href="#about" data-sec="about">About</a>
+    <a href="#contact" data-sec="contact">Contact</a>
   </nav>
 </header>
 
 <main>
-  <section class="hero" id="hero">
+  <section class="hero" id="hero" aria-label="Welcome">
+    <div class="hero-media"><img src="images/site/hero.webp" alt="" width="1920" height="1080" fetchpriority="high"></div>
     <div class="wrap">
-      <p class="eyebrow">Depuis Hamra, avec amour</p>
-      <h1>A Parisian brasserie<br>in the heart of Beirut</h1>
-      <p class="lede">Classic French cooking, halal meat, no alcohol, fresh pastries and a warm welcome — from long lunches to late dinners.</p>
-      <div class="hero-cta"><a class="btn gold" href="#reserve">Reserve a table</a><a class="btn ghost" href="#menu">See the menu</a></div>
+      <p class="eyebrow">Brasserie française · Hamra, Beirut</p>
+      <h1>A Parisian brasserie in the heart of Beirut</h1>
+      <p class="lede">Classic French cooking with a Lebanese welcome: halal meat, no alcohol, fresh pastries and long lunches that turn into late dinners.</p>
+      <div class="hero-cta"><a class="btn gold" href="#reserve">Reserve a table</a><a class="btn ghost" href="#menu">Explore the menu</a></div>
     </div>
   </section>
+  <div class="infobar" aria-label="Opening hours, address and phone">
+    <div class="wrap">
+      <div><h4>Opening hours</h4><p data-cfg="hours"></p></div>
+      <div><h4>Find us</h4><p><a data-map href="#" target="_blank" rel="noopener noreferrer" data-cfg="address"></a></p></div>
+      <div><h4>Reservations</h4><p><a data-tel href="#" data-cfg="phone"></a></p></div>
+    </div>
+  </div>
 
-  <!-- 1. Menu + reviews -->
+  <!-- Menu -->
   <section id="menu" class="sec">
     <div class="wrap">
       <header class="sec-head"><p class="eyebrow">La carte</p><h2>Our Menu</h2>
-        <p class="hint">Hover over or tap any dish or drink to see what's inside.</p></header>
+        <p class="hint">Select any dish or drink to read its description, ingredients and dietary labels. Everything we serve is pork-free and alcohol-free.</p></header>
       <div class="cats" id="cats" role="tablist" aria-label="Menu categories"></div>
       <p class="cat-note" id="cat-note"></p>
       <div class="dishes" id="dishes" role="tabpanel"></div>
-      <p class="legend"><span class="tag tag-h">Halal</span><span class="tag tag-v">Vegetarian</span><span class="tag tag-s">Spicy</span></p>
+      <p class="legend" aria-label="Dietary labels">
+        <span class="tag tag-h"><i data-icon="halal"></i>Halal</span>
+        <span class="tag tag-v"><i data-icon="leaf"></i>Vegetarian</span>
+        <span class="tag tag-m"><i data-icon="cow"></i>Meat</span>
+        <span class="tag tag-c"><i data-icon="drumstick"></i>Poultry</span>
+        <span class="tag tag-f"><i data-icon="fish"></i>Fish &amp; seafood</span>
+        <span class="tag tag-g"><i data-icon="wheat"></i>Gluten</span>
+        <span class="tag tag-s"><i data-icon="chili"></i>Spicy</span>
+      </p>
 
-      <div id="reviews" class="reviews">
-        <header class="sec-head"><p class="eyebrow">Ce qu'ils disent</p><h2>Reviews</h2><p class="hint" id="avg">Be the first to leave a review.</p></header>
-        <form id="review-form" class="card review-form" novalidate>
-          <fieldset class="stars" id="stars"><legend>Your rating</legend></fieldset>
-          <label for="review-text" class="sr">Your review</label>
-          <textarea id="review-text" rows="2" maxlength="600" placeholder="Tell us about your visit… (press Enter to post)"></textarea>
-          <div class="row-end"><span class="form-msg" id="review-msg"></span><button class="btn" type="submit">Post review</button></div>
-        </form>
-        <ul class="review-list" id="review-list"></ul>
-      </div>
     </div>
   </section>
 
-  <!-- 2. Reservation -->
+  <!-- Reservation -->
   <section id="reserve" class="sec alt">
     <div class="wrap">
       <header class="sec-head"><p class="eyebrow">Réservation</p><h2>Reserve a Table</h2><p class="hint">Reservations accepted from <b data-rule="hours">12:00 to 23:00</b>, every day. We confirm every request, then call you on the day for final approval.</p></header>
       <div class="reserve-grid">
-        <form id="res-form" class="card" novalidate>
+        <form id="res-form" class="card res-form" novalidate>
           <div class="grid2">
             <div><label for="r-name">Full name</label><input id="r-name" autocomplete="name" maxlength="80" required><small class="field-err" id="re-name"></small></div>
             <div><label for="r-phone">Phone number</label>
@@ -122,48 +136,83 @@
     </div>
   </section>
 
-  <!-- 3. About -->
+  <!-- Reviews -->
+  <section id="reviews" class="sec reviews">
+    <div class="wrap">
+      <header class="sec-head"><p class="eyebrow">Ce qu'ils disent</p><h2>Guest Reviews</h2><p class="hint" id="avg">Be the first to leave a review.</p></header>
+      <form id="review-form" class="card review-form" novalidate>
+        <fieldset class="stars" id="stars"><legend>Your rating</legend></fieldset>
+        <label for="review-text" class="sr">Your review</label>
+        <textarea id="review-text" rows="2" maxlength="600" placeholder="Tell us about your visit… (press Enter to post)"></textarea>
+        <div class="row-end"><span class="form-msg" id="review-msg"></span><button class="btn" type="submit">Post review</button></div>
+      </form>
+      <ul class="review-list" id="review-list"></ul>
+    </div>
+  </section>
+
+  <!-- About -->
   <section id="about" class="sec">
     <div class="wrap">
-      <header class="sec-head"><p class="eyebrow">La maison</p><h2>About Us</h2></header>
+      <div class="story">
+        <div class="story-media">
+          <img class="m1" src="images/site/about-table.webp" alt="A table set by the window at Maison Hamra" width="1200" height="900" loading="lazy">
+          <img class="m2" src="images/site/about-mezza.webp" alt="A French-Lebanese mezza spread" width="800" height="600" loading="lazy">
+        </div>
+        <div class="story-text">
+          <p class="eyebrow">La maison</p>
+          <h2>Paris on Hamra Street</h2>
+          <p>Maison Hamra brings the brasserie to Beirut: onion soup under a blanket of gruyère, steak frites, bœuf bourguignon, bouillabaisse and a pâtisserie counter that changes with the seasons, served in a dining room of marble, brass and bentwood.</p>
+          <p>Our kitchen cooks the French classics with halal beef and chicken and without a drop of alcohol, so every guest can share the whole table, from a long lunch to a late dinner.</p>
+          <ul class="story-facts">
+            <li><b>100%</b><span>Halal beef &amp; chicken</span></li>
+            <li><b>0%</b><span>Alcohol, in dishes or drinks</span></li>
+            <li><b>12–00</b><span>Open every day</span></li>
+          </ul>
+        </div>
+      </div>
+
       <div class="about-grid">
         <article class="card">
-          <h3>How it works</h3>
+          <i data-icon="clock" class="ico big"></i>
+          <h3>How reservations work</h3>
           <ol class="steps">
-            <li><b>Reserve</b> online from <span data-rule="hours">12:00 to 23:00</span> with your name, phone, guests, date and time — add a set menu if you like. Times that are fully booked are marked in the list.</li>
-            <li><b>We confirm</b> — the team reviews your request and you get a notification.</li>
-            <li><b>Deposit</b> — set menus <span data-rule="deposit">over $300 need a 25% deposit</span>, paid before the deadline shown on your reservation.</li>
-            <li><b>On the day</b> — you and the team both get a morning reminder; we call to give the final approval.</li>
-            <li><b>After your meal</b> — we ask what you loved and what we can do better.</li>
+            <li><b>Reserve</b> online from <span data-rule="hours">12:00 to 23:00</span> with your name, phone, guests, date and time. Fully booked times are marked in the list.</li>
+            <li><b>We confirm</b>: the team reviews your request and you get a notification.</li>
+            <li><b>Deposit</b>: set menus <span data-rule="deposit">over $300 need a 25% deposit</span>, paid before the deadline shown on your reservation.</li>
+            <li><b>On the day</b>: you and the team both get a morning reminder, and we call to give the final approval.</li>
+            <li><b>After your meal</b>: we ask what you loved and what we can do better.</li>
           </ol>
         </article>
         <article class="card">
+          <i data-icon="star" class="ico big"></i>
           <h3>What we serve</h3>
-          <p>French brasserie classics — soupe à l'oignon, steak frites, bœuf bourguignon, coq au vin, bouillabaisse — plus sandwiches, a French-Lebanese mezza table, house pastries, coffee, fresh juices and mocktails. Open every day from noon until midnight.</p>
+          <p>French brasserie classics: soupe à l'oignon, steak frites, bœuf bourguignon, blanquette, bouillabaisse. Sandwiches at lunch, a French-Lebanese mezza table to share, house pastries, coffee, fresh juices and mocktails.</p>
+          <img src="images/site/about-pastry.webp" alt="The pastry counter" width="800" height="600" loading="lazy" style="border-radius: 6px; margin-top: 8px">
         </article>
         <article class="card">
+          <i data-icon="leaf" class="ico big"></i>
           <h3>Alcohol-free</h3>
-          <p>Maison Hamra is <b>100% alcohol-free</b>. We serve no alcoholic drinks, and no wine, spirits or liqueur is used in any dish or dessert — our French classics are cooked with stocks, juices and herbs instead.</p>
+          <p>Maison Hamra is <b>100% alcohol-free</b>. We serve no alcoholic drinks, and no wine, spirits or liqueur is used in any dish or dessert. Our French classics are cooked with stocks, juices and herbs instead.</p>
         </article>
         <article class="card">
+          <i data-icon="halal" class="ico big"></i>
           <h3>Halal</h3>
-          <p>All our <b>beef and chicken are halal</b>, from certified suppliers. There is <b>no pork</b> anywhere on our menu or in our kitchen — where a French classic calls for ham or bacon, we use halal smoked beef. Seafood, duck and snails are not marked halal on the menu.</p>
+          <p>All our <b>beef and chicken are halal</b>, from certified suppliers. There is <b>no pork</b> anywhere on our menu or in our kitchen: where a French classic calls for ham or bacon, we use halal smoked beef. Seafood, duck and snails are not marked halal on the menu.</p>
         </article>
         <article class="card cert">
           <i data-icon="shield" class="ico big"></i>
-          <div>
-            <h3>Food safety certificate</h3>
-            <p>Our kitchen follows HACCP food-safety practices, and our team is trained in food hygiene. The certificate is displayed at the entrance.</p>
-            <p class="small muted">Certificate no. <b>— to be added —</b> · Valid until <b>— to be added —</b></p>
-          </div>
+          <h3>Food safety certificate</h3>
+          <p>Our kitchen follows HACCP food-safety practices, and our team is trained in food hygiene. The certificate is displayed at the entrance.</p>
+          <p class="small muted">Certificate no. <b>— to be added —</b> · Valid until <b>— to be added —</b></p>
         </article>
         <article class="card">
+          <i data-icon="lock" class="ico big"></i>
           <h3>Payments &amp; security</h3>
           <ul class="pay-list">
-            <li><i data-icon="card"></i> Card — through a secure hosted checkout; we never see or store your card number.</li>
-            <li><i data-icon="bank"></i> Bank transfer — <a href="pay.html#bank">bank payment details</a></li>
-            <li><i data-icon="wallet"></i> Whish Money · Cash at the restaurant</li>
-            <li><i data-icon="lock"></i> Accounts and reservations are protected by encrypted connections and per-customer access rules.</li>
+            <li><i data-icon="card"></i><span>Card, through a secure hosted checkout. We never see or store your card number.</span></li>
+            <li><i data-icon="bank"></i><span>Bank transfer: <a href="pay.html#bank">bank payment details</a></span></li>
+            <li><i data-icon="wallet"></i><span>Whish Money, or cash at the restaurant</span></li>
+            <li><i data-icon="lock"></i><span>Accounts and reservations are protected by encrypted connections and per-customer access rules.</span></li>
           </ul>
         </article>
         <article class="card install-card">
@@ -182,21 +231,61 @@
 
 <footer id="contact" class="foot">
   <div class="wrap">
-    <h2>Contact Us</h2>
-    <p class="foot-addr" data-cfg="address"></p>
-    <div class="socials">
-      <a id="f-phone" class="soc" aria-label="Call us"><i data-icon="phone"></i></a>
-      <span id="f-insta" class="soc" role="img" aria-label="Instagram (coming soon)"><i data-icon="instagram"></i></span>
-      <a id="f-map" class="soc" target="_blank" rel="noopener noreferrer" aria-label="Location on Google Maps"><i data-icon="pin"></i></a>
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <img src="icons/icon.svg" alt="" width="56" height="56">
+        <h2>Maison Hamra</h2>
+        <p>Brasserie française in Hamra, Beirut. French classics, halal and alcohol-free, served every day from noon until midnight.</p>
+        <div class="socials">
+          <a data-tel href="#" class="soc" aria-label="Call us"><i data-icon="phone"></i></a>
+          <span id="f-insta" class="soc" role="img" aria-label="Instagram (coming soon)"><i data-icon="instagram"></i></span>
+          <a data-map href="#" class="soc" target="_blank" rel="noopener noreferrer" aria-label="Location on Google Maps"><i data-icon="pin"></i></a>
+        </div>
+      </div>
+      <div>
+        <h4>Visit</h4>
+        <p data-cfg="address"></p>
+        <p data-cfg="hours"></p>
+        <p><a data-map href="#" target="_blank" rel="noopener noreferrer">Open in Google Maps</a></p>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p><a data-tel href="#" data-cfg="phone"></a></p>
+        <p><a data-whatsapp href="#" target="_blank" rel="noopener noreferrer">WhatsApp</a></p>
+        <ul class="foot-links">
+          <li><a href="#reserve">Reserve a table</a></li>
+          <li><a href="pay.html#bank">Bank payments</a></li>
+          <li><a href="privacy.html">Privacy policy</a></li>
+          <li><a href="terms.html">Terms</a></li>
+        </ul>
+      </div>
     </div>
-    <p class="foot-phone" data-cfg="phone"></p>
-    <p class="small" data-cfg="hours"></p>
-    <p class="foot-links"><a href="pay.html#bank">Bank payments</a> · <a href="privacy.html">Privacy policy</a> · <a href="terms.html">Terms</a></p>
-    <p class="small muted-light">© <span id="year"></span> Maison Hamra. All rights reserved.</p>
+    <div class="foot-bottom">
+      <span>© <span id="year"></span> Maison Hamra. All rights reserved.</span>
+      <span><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></span>
+    </div>
   </div>
 </footer>
 
 <div id="toasts" class="toasts" aria-live="polite"></div>
+
+<!-- dish details -->
+<dialog id="dish-dlg" class="dlg wide dish-dlg" aria-labelledby="dd-name">
+  <div>
+    <button type="button" class="dlg-x" data-close aria-label="Close"><i data-icon="close"></i></button>
+    <figure class="dd-photo" id="dd-photo"></figure>
+    <div class="dd-body">
+      <p class="eyebrow" id="dd-cat"></p>
+      <div class="dd-head"><h2 id="dd-name"></h2><b class="price" id="dd-price"></b></div>
+      <p class="dd-desc" id="dd-desc"></p>
+      <ul class="dd-tags" id="dd-tags" aria-label="Dietary labels"></ul>
+      <h3>Ingredients</h3>
+      <ul class="dd-ingr" id="dd-ingr"></ul>
+      <h3>Good to know</h3>
+      <p class="dd-note">Everything we serve is pork-free and alcohol-free, and all our meat is halal. Tell us about allergies or preferences in your reservation notes, or ask our team.</p>
+    </div>
+  </div>
+</dialog>
 
 <!-- sign in / sign up -->
 <dialog id="auth-dlg" class="dlg" aria-labelledby="auth-title">
@@ -233,7 +322,7 @@
     <dl class="profile" id="profile"></dl>
     <h3>My reservation codes</h3>
     <ul class="res-list" id="acct-list"></ul>
-    <button type="button" class="btn ghost-dark wide" id="sign-out">Sign out</button>
+    <button type="button" class="btn outline wide" id="sign-out">Sign out</button>
   </div>
 </dialog>
 
@@ -245,7 +334,7 @@
     <p id="cancel-what"></p>
     <label for="cancel-reason">Reason <span class="opt">(optional)</span></label>
     <textarea id="cancel-reason" rows="2" maxlength="300"></textarea>
-    <div class="row-end"><button type="button" class="btn ghost-dark" data-close>Keep it</button><button class="btn danger" type="submit">Cancel reservation</button></div>
+    <div class="row-end"><button type="button" class="btn outline" data-close>Keep it</button><button class="btn danger" type="submit">Cancel reservation</button></div>
     <p class="form-msg" id="cancel-msg"></p>
   </form>
 </dialog>
@@ -258,7 +347,7 @@
     <p class="small muted" id="fb-what"></p>
     <fieldset class="stars" id="fb-stars"><legend>Overall rating</legend></fieldset>
     <label for="fb-loved">What did you love?</label><textarea id="fb-loved" rows="2" maxlength="800"></textarea>
-    <p class="fb-sub">Was there anything you didn't like about…</p>
+    <p class="eyebrow" style="margin-top: 18px">Was there anything you didn't like about…</p>
     <label for="fb-service">The service</label><textarea id="fb-service" rows="2" maxlength="800"></textarea>
     <label for="fb-food">The food &amp; beverages</label><textarea id="fb-food" rows="2" maxlength="800"></textarea>
     <label for="fb-place">The place</label><textarea id="fb-place" rows="2" maxlength="800"></textarea>
@@ -269,9 +358,6 @@
 </dialog>
 
 <script src="js/vendor/supabase.js"></script>
-<script src="js/config.js"></script>
-<script src="js/menu.js"></script>
-<script src="js/core.js"></script>
-<script src="js/app.js"></script>
+<script type="module" src="js/pages/home.js"></script>
 </body>
 </html>

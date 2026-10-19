@@ -6,17 +6,20 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://efwqkllaultepxprwert.supabase.co; connect-src 'self' https://efwqkllaultepxprwert.supabase.co wss://efwqkllaultepxprwert.supabase.co; base-uri 'self'; form-action 'self'">
 <meta name="robots" content="noindex">
 <title>Pay deposit — Maison Hamra</title>
-<meta name="theme-color" content="#5a1a24">
+<meta name="theme-color" content="#faf7f2">
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Lato:wght@400;700&display=swap">
-<link rel="stylesheet" href="css/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/site.css">
 <link rel="stylesheet" href="css/pay.css">
 </head>
 <body>
 <header class="top">
   <div class="top-row">
-    <a class="brand" href="index.html"><img src="icons/icon.svg" alt="" width="40" height="40"><span><b>Maison Hamra</b><small>Secure deposit payment</small></span></a>
+    <a class="brand" href="index.html"><img src="icons/icon.svg" alt="" width="42" height="42"><span><b>Maison Hamra</b><small>Secure deposit payment</small></span></a>
     <div class="tools">
       <div class="bell-wrap">
         <button id="bell" class="icon-btn" type="button" aria-label="Notifications" aria-haspopup="true" aria-expanded="false" aria-controls="notif-panel"><i data-icon="bell"></i><span id="badge" class="badge" hidden>0</span></button>
@@ -26,14 +29,15 @@
           <ul id="notif-list" class="notif-list"></ul>
         </div>
       </div>
-      <a class="icon-btn" href="index.html#reserve">Back</a>
+      <a class="icon-btn" href="index.html#reserve">Back to site</a>
     </div>
   </div>
 </header>
 
 <main class="wrap pay-main">
+  <header class="sec-head"><p class="eyebrow">Réservation</p><h2>Deposit payment</h2></header>
   <section class="card due" id="due-card" hidden>
-    <p class="eyebrow">Deposit</p>
+    <p class="eyebrow">Amount due</p>
     <h1 id="due-amount">$0</h1>
     <p id="due-what"></p>
     <p class="countdown" id="countdown"></p>
@@ -47,9 +51,9 @@
       <article class="card method" id="card-method">
         <i data-icon="card" class="ico big"></i>
         <h3>Card</h3>
-        <p>Pay by Visa or Mastercard on our payment provider's secure checkout page. Your card details go directly to the provider — Maison Hamra never sees or stores them.</p>
+        <p>Pay by Visa or Mastercard on our payment provider's secure checkout page. Your card details go directly to the provider. Maison Hamra never sees or stores them.</p>
         <a class="btn gold" id="card-link" target="_blank" rel="noopener noreferrer" hidden>Pay by card</a>
-        <p class="small muted" id="card-soon">Online card payment is coming soon — please use bank transfer or Whish for now.</p>
+        <p class="small muted" id="card-soon">Online card payment is coming soon. Please use bank transfer or Whish for now.</p>
       </article>
 
       <article class="card method" id="bank">
@@ -107,8 +111,6 @@
 </dialog>
 
 <script src="js/vendor/supabase.js"></script>
-<script src="js/config.js"></script>
-<script src="js/core.js"></script>
-<script src="js/pay.js"></script>
+<script type="module" src="js/pages/pay.js"></script>
 </body>
 </html>
