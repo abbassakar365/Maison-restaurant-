@@ -34,7 +34,7 @@ async function config(): Promise<Config> {
 }
 
 function linkFor(n: Notification, site: string): string {
-  if (n.for_staff) return site + "team/";
+  if (n.for_staff) return site + "admin/";
   if (n.kind === "feedback" && n.reservation_id) return site + "index.html?feedback=" + n.reservation_id;
   if ((n.kind === "deposit_due" || n.kind === "deposit_warning") && n.reservation_id) return site + "pay.html?r=" + n.reservation_id;
   return site + "index.html#reserve";

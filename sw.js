@@ -1,10 +1,10 @@
 /* Maison Hamra service worker — shared by the customer app (scope ./) and the
-   team app (team/sw.js imports this file, scope ./team/).
+   admin app (admin/sw.js imports this file, scope ./admin/).
    Shows Web Push alerts even when the app is closed, and opens the right page on tap. */
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
 
-const ROOT = self.registration.scope.replace(/team\/$/, '');
+const ROOT = self.registration.scope.replace(/admin\/$/, '');
 const ICON = ROOT + 'icons/icon-192.png';   // large colour picture in the alert
 const BADGE = ROOT + 'icons/badge-96.png';  // small one-colour symbol in the phone's status bar
 

@@ -22,4 +22,4 @@ No people, no text, no labels, no logo, no watermark."
 
 Convert the result with `cwebp -q 80 -resize 800 0 photo.png -o menu/<slug>.webp`, add the slug to
 `js/menu-data.js`, and (for an existing database row) set the dish's `photo_url` to
-`images/menu/<slug>.webp` in the team app or with SQL.
+`images/menu/<slug>.webp` in the admin app or with SQL.

@@ -314,7 +314,7 @@ begin
   return r;
 end $$;
 
--- Team approves --------------------------------------------------------
+-- Admin approves --------------------------------------------------------
 create or replace function public.confirm_reservation(p_id uuid)
 returns public.reservations
 language plpgsql security definer set search_path = public as $$
@@ -502,7 +502,7 @@ select cron.unschedule(jobname) from cron.job where jobname in ('mh-daily-remind
 select cron.schedule('mh-daily-reminders', '0 5 * * *', 'select public.run_daily_reminders()');
 select cron.schedule('mh-deposits', '*/10 * * * *', 'select public.process_deposits()');
 
--- Live updates for the notification bell and the team dashboard
+-- Live updates for the notification bell and the admin dashboard
 do $$ begin
   alter publication supabase_realtime add table public.notifications;
 exception when duplicate_object then null; end $$;
@@ -603,7 +603,7 @@ grant execute on function public.push_config() to service_role;
 revoke execute on function public._push_hook() from public, anon, authenticated;
 
 -- =====================================================================
--- Restaurant settings (edited in the team app → Settings), table capacity,
+-- Restaurant settings (edited in the admin app → Settings), table capacity,
 -- and the team-editable menu with photos.
 -- The live create_reservation (capacity + settings-based deposit) replaces the
 -- earlier version above; see supabase migrations mh_09a–mh_09d.
@@ -767,7 +767,7 @@ create table if not exists public.menu_items (
   updated_at timestamptz not null default now()
 );
 create index if not exists menu_items_cat_idx on public.menu_items (category_id, sort);
--- photos may be https URLs (uploaded from the team app) or paths inside this repository (images/menu/…)
+-- photos may be https URLs (uploaded from the admin app) or paths inside this repository (images/menu/…)
 alter table public.menu_items drop constraint if exists menu_items_photo_url_check;
 alter table public.menu_items add constraint menu_items_photo_url_check check (photo_url is null or photo_url ~ '^(https://|images/)');
 -- dish descriptions and the meat / poultry / fish / gluten labels were added later
@@ -822,7 +822,7 @@ revoke execute on function public.push_config() from public, anon, authenticated
 grant execute on function public.push_config() to service_role;
 
 -- =====================================================================
--- Auto-pilot (team app → Auto-pilot) and automatic deposit verification
+-- Auto-pilot (admin app → Auto-pilot) and automatic deposit verification
 -- Applied as migrations mh_11a … mh_11f. The bank / payment provider posts
 -- signed payment confirmations to the `payment-webhook` Edge Function, which
 -- calls record_payment(). Signing key in Vault: 'payment_webhook_secret'.
@@ -1147,7 +1147,7 @@ begin
   return problem;
 end $$;
 
--- Team app → Auto-pilot → Test a payment
+-- Admin app → Auto-pilot → Test a payment
 create or replace function public.simulate_payment(p_code text, p_payer text, p_amount numeric)
 returns text language plpgsql security definer set search_path = public as $$
 begin

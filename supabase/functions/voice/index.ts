@@ -8,7 +8,7 @@
 // Every request must carry the secret from Supabase Vault `phone_url_key` in the URL (…/voice?k=<secret>), or be
 // signed by the provider (X-SignalWire-Signature or X-Twilio-Signature) with `phone_signing_key` or `twilio_auth_token`.
 // Claude's API key is in Vault as `anthropic_api_key`.
-// The team turns the Auto-pilot on or off and sets the transfer number in the team app → Calls.
+// The team turns the Auto-pilot on or off and sets the transfer number in the admin app → Calls.
 //
 // Steps: start → (turn | silence)* → transfer → dial-done → … ; status runs when the call ends.
 import Anthropic from "npm:@anthropic-ai/sdk@0.132.1";

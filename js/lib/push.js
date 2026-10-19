@@ -14,7 +14,7 @@ let registration = null;
 let pushOn = false;
 export const isPushOn = () => pushOn;
 
-const swUrl = ROOT + (APP === 'team' ? 'team/sw.js' : 'sw.js');
+const swUrl = ROOT + (APP === 'team' ? 'admin/sw.js' : 'sw.js');
 export const swReady = 'serviceWorker' in navigator
   ? navigator.serviceWorker.register(swUrl).then(() => navigator.serviceWorker.ready).then((r) => (registration = r)).catch(() => null)
   : Promise.resolve(null);
